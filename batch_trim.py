@@ -26,15 +26,6 @@ Calls trimmomatic with the following parameters
 - SLIDINGWINDOW:4:15
 - MINLEN:35
 
---- ToDo
-
-Check how to run this in parallel, with the loop??
-Check number of threads to assign
-
---- In progress
-
-Changing directories to use bash arguements...
-
 """
 # --- packages
 import os
@@ -45,17 +36,14 @@ from multiprocessing import Process, Lock
 
 # --- variables using sys.argv
 
-basedir         = sys.argv[1]
-inputdirectory  = sys.argv[2]
-program         = sys.argv[3]
-processed       = basedir + "batch_trim/processed/"
-log             = basedir + "batch_trim/log/"
+basedir = sys.argv[1]
+inputdirectory = sys.argv[2]
+program = sys.argv[3]
+processed = basedir + "batch_trim/processed/"
+log = basedir + "batch_trim/log/"
 aux = "aux_files/"
 
 # --- code body
-
-# --- Function version
-
 
 def call_trimmomatic_par(l, subdir):
     """
@@ -86,7 +74,6 @@ def call_trimmomatic_par(l, subdir):
 # --- __main__ call
 
 
-# For parallel
 if __name__ == "__main__":
     lock = Lock()
     # --- check dors and create if neccessary

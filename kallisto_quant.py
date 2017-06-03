@@ -28,16 +28,16 @@ import time
 import os
 import sys
 import subprocess
-from multiprocessing import Process, Lock
+
 
 # --- variables using sys.argv
 
-basedir         = sys.argv[1]
-inputdirectory  = sys.argv[2]
-program         = sys.argv[3]
-processed       = basedir + "kallisto/processed/"
-log             = basedir + "kallisto/log/"
-max_threads     = (os.cpu_count() * 2)
+basedir = sys.argv[1]
+inputdirectory = sys.argv[2]
+max_threads = sys.argv[3]
+processed = basedir + "kallisto/processed/"
+log = basedir + "kallisto/log/"
+
 
 # --- functions
 
@@ -51,9 +51,10 @@ def kallisto_call(read1, threads):
     also review how to actually do this... current way does not seem to.
     """
     dividing = read1.split(".")
+    basename = dividing[0].replace("1P", "")
     read2 = read1.replace("1P", "2P")
-    subprocess.call(program + "kallisto quant -i " + program + "GRCh38transcriptome.idx -t " + threads + " -o \\" +
-    processed + dividing[0] + " -b 100 " + inputdirectory + read1 + " " + inputdirectory + read2 + " >" + log + time.strftime("%Y%m%d-%H%M%S") + "_" + dividing[0] + ".txt" + " 2>&1", shell=True)
+    subprocess.call("kallisto quant -i aux_files/GRCh38transcriptome_kal.idx -t " + threads + " -o \\" +
+    processed + basename + " -b 100 " + inputdirectory + read1 + " " + inputdirectory + read2 + " >" + log + time.strftime("%Y%m%d") + "_" + dividing[0] + ".txt" + " 2>&1", shell=True)
 
 
     #
