@@ -1,0 +1,2 @@
+/home/slee/programs/Trimmomatic-0.36/
+/home/slee/downloads/Homo_sapiens.GRCh38.rel79.cdna.all.fa.gz
