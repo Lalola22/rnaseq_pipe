@@ -6,7 +6,7 @@ Running the script `wrapper.sh` on raw-read `.fastq.gz` data in an environment w
 
 All programs used need to be added to the PATH
 
-### usage
+### Usage
 
 The call to generate the data for the paper was
 

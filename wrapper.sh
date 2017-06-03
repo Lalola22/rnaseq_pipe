@@ -44,8 +44,9 @@ fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 # Adaptor trimming
 
 echo "Trimming adaptors..."
+echo "Outputs will be sent to log"
 
-python3 batch_trim.py "${outDir}/" "$rawDIR" "$trimmomaticPath"
+echo python3 batch_trim.py "${outDir}/" "$rawDIR" "$trimmomaticPath"
 ### trimmomatic .fa files needs to be added to aux_files
 
 
@@ -53,42 +54,48 @@ python3 batch_trim.py "${outDir}/" "$rawDIR" "$trimmomaticPath"
 
 echo "Post trim read QC"
 
-fastqArrayTrim=($(find "${outDir}/batch_trim/processed" -type f -name "*P.fastq.gz"))
+echo fastqArrayTrim=($(find "${outDir}/batch_trim/processed" -type f -name "*P.fastq.gz"))
 
-fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
+echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # kallisto index
 
-echo "Creating the kallisto index"
+echo "Creating the kallisto index..."
 
-kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "${extraPaths[1]}"
+echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "${extraPaths[1]}"
 
 # kallisto quant
 
 echo "Kallisto quantifications..."
+echo "Outputs will be sent to log"
 
-kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
+echo kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
 
 # Salmon index
 
-echo "Creating the Salmon index"
+echo "Creating the Salmon index..."
 
-salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
+echo salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
 
 # Salmon quant
 
 echo "Salmon quantifications..."
+echo "Outputs will be sent to log"
 
-salmon_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
+echo salmon_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
 
 # Salmon prep with Wasabi
 
 echo "Wasabi-ing that Salmon"
 
-R wasabi.R "${outDir}/salmon/processed"
+echo Rscript wasabi.R "${outDir}/salmon/processed"
 
-# Sleuth analysis
+# Sleuth analysis for kallisto
 
+echo sleuth_wrapper.sh "in" "out"
 
+# Sleuth analysis for Salmon
+
+echo sleuth_wrapper.sh "in" "out"
 
 # Create heatmaps
