@@ -34,6 +34,9 @@ oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
+trimmomaticPath=${extraPaths[0]}
+GRCh38trans=${extraPaths[1]}
+
 export PATH=${PWD}:$PATH
 
 # Pre-trim QC
@@ -68,7 +71,7 @@ echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 echo "Creating the kallisto index..."
 
-echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "${extraPaths[1]}"
+echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
 
 # kallisto quant
 
