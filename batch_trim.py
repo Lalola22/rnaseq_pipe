@@ -33,12 +33,14 @@ import sys
 from subprocess import call
 
 from multiprocessing import Process, Lock
+from joblib import Parallel, delayed
 
 # --- variables using sys.argv
 
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
 trim = sys.argv[3]
+max_threads = int(sys.argv[4])
 processed = basedir + "batch_trim/"
 aux = "aux_files/"
 
@@ -81,10 +83,11 @@ def call_trimmomatic_par(l, subdir):
 
 if __name__ == "__main__":
     lock = Lock()
-    # --- check dors and create if neccessary
+    # --- check dirs and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
     # --- loop for call to trimmomatic
-    for sub in os.listdir(inputdirectory):
-        if os.path.isdir(inputdirectory + sub):
-            Process(target=call_trimmomatic_par, args=(lock, sub)).start()
+    # for sub in os.listdir(inputdirectory):
+        # if os.path.isdir(inputdirectory + sub):
+        #     Process(target=call_trimmomatic_par, args=(lock, sub)).start()
+    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory)

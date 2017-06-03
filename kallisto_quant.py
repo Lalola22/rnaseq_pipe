@@ -20,14 +20,14 @@ An example pair of files is:
     25uM_1_R1_trimmed_1P.fastq.gz
     25uM_1_R1_trimmed_2P.fastq.gz
 
-Outputs kallisto files for each read pair and associated log files in a nested directory
+Outputs kallisto files for each read pair and
+associated log files in a nested directory
 """
 # --- packages
 
-import time
 import os
 import sys
-import subprocess
+from subprocess import call
 
 
 # --- variables using sys.argv
@@ -41,7 +41,7 @@ log = basedir + "kallisto/log/"
 
 # --- functions
 
-def kallisto_call(read1, threads):
+def kallisto_call(read1):
     """
     l is the lock object
     read1 is the forward read
@@ -53,27 +53,13 @@ def kallisto_call(read1, threads):
     dividing = read1.split(".")
     basename = dividing[0].replace("1P", "")
     read2 = read1.replace("1P", "2P")
-    subprocess.call("kallisto quant -i aux_files/GRCh38transcriptome_kal.idx -t " + threads + " -o \\" +
-    processed + basename + " -b 100 " + inputdirectory + read1 + " " + inputdirectory + read2 + " >" + log + time.strftime("%Y%m%d") + "_" + dividing[0] + ".txt" + " 2>&1", shell=True)
-
-
-    #
-    #     ## need to work out what the direcotry structure will be before I can write this code.
-    #     ## ie is it more than main dir --> subdirs (if so write function to extract subdirs)
-    #     fulldir = inputdirectory + subdir + "/"
-    #     ## add a for read1 loop to idnetify read1's if needed? based on dir structure
-    #     if os.path.isfile(fulldir + read1 + fastq.gz):
-    #         r1 = read1 + fastq.gz
-    #         r2 = r1.replace("1","2") #FIXME check what actually will have to be replaced from the trimmed names
-    #         output = processed + r1 #FIXME check this is correct with what docs want
-    #         subprocess.call("echo " + program + "kallisto quant -i " + program + "GRCh38transcriptome.idx -o " output + " \ " +
-    #         "-b 100 " + r1 + " " + r2 + " >" + log + target + "_kallisto_quant.txt" +" 2>&1", shell=True)
-    # finally:
-    #     l.release()
+    call("kallisto quant -i aux_files/GRCh38transcriptome_kal.idx -t " +
+        max_threads + " -o " + processed + basename + " -b 100 " +
+        inputdirectory + read1 + " " + inputdirectory + read2, shell=True)
 
 # --- __main__ call
 
-## For parallel
+
 if __name__ == "__main__":
     # --- check dirs and create if neccessary
     if not os.path.exists(processed):
@@ -87,4 +73,4 @@ if __name__ == "__main__":
             read_list.append(fname)
     # --- call kallisto_call on each read pair in parallel
     for read in read_list:
-        kallisto_call(read, str(max_threads))
+        kallisto_call(read)
