@@ -45,33 +45,36 @@ aux = "aux_files/"
 
 # --- code body
 
+
 def call_trimmomatic_par(l, subdir):
     """
     call wrapper for trimmomatic for trimming of adaptors sequences
     designed to be able to be called for parallel processing
-    call in a loop (or another function) to loop through each dir for different classes
+    call in a loop (or another function) to loop through each
+    dir for different classes
     """
     l.acquire()
     try:
-        fulldir = inputdirectory + subdir + "/"  # construct full path of each class
+        fulldir = inputdirectory + subdir + "/"  # construct full path
         try:
             os.path.isdir(fulldir)
         except Exception as e:
             print("{} is not a directory".format(fulldir))
         for fileR1 in os.listdir(fulldir):
             dividing = fileR1.split(".")
-            if "R1" in fileR1:  # select each of the forward read files to loop through
+            if "R1" in fileR1:  # select forward read files to loop through
                 fileR2 = fileR1.replace("R1", "R2")
                 if os.path.isfile(fulldir + fileR2):
-                    dividing1 = fileR2.split(".")
-                    basename = dividing[0].replace("_R1", "")  # This is the forward read sans extensions
+                    basename = dividing[0].replace("_R1", "")
+                    # This is the forward read sans extensions
                     subprocess.call("echo java -jar " + trim +
-                    "trimmomatic-0.36.jar PE -phred33 " +
-                    fulldir + fileR1 + " " + fulldir + fileR2 + " -baseout " +
-                    processed + basename +"_trimmed.fastq.gz ILLUMINACLIP:" +
-                    aux + "/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:35" +
-                    # " > " + log + "_" + basename + "_trimmomatic.txt" +" 2>&1",
-                    shell=True)
+                        "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
+                        " " + fulldir + fileR2 + " -baseout " + processed +
+                        basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
+                        "/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
+                        "SLIDINGWINDOW:4:15 MINLEN:35",  # +
+                        # " >" + log + sub + "_" + basename + "_trimmomatic.txt" + " 2>&1"
+                        shell=True)
     finally:
         l.release()
 
