@@ -40,7 +40,7 @@ export PATH=${PWD}:$PATH
 
 echo "Inital read QC..."
 
-mkdir "${outDir}/fastqc/raw"
+mkdir -p "${outDir}/fastqc/raw"
 
 echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
@@ -59,6 +59,8 @@ echo python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
 echo "Post trim read QC"
 
 echo fastqArrayTrim=($(find "${outDir}/batch_trim/processed" -type f -name "*P.fastq.gz"))
+
+mkdir -p "${outDir}/fastqc/trimmed"
 
 echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
