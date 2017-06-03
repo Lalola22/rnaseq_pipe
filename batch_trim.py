@@ -65,9 +65,13 @@ def call_trimmomatic_par(l, subdir):
                 if os.path.isfile(fulldir + fileR2):
                     dividing1 = fileR2.split(".")
                     basename = dividing[0].replace("_R1", "")  # This is the forward read sans extensions
-                    subprocess.call("echo java -jar " + program + "trimmomatic-0.36.jar PE -phred33 \\" +
-                    fulldir + fileR1 + " " + fulldir + fileR2 + " -baseout \\" +
-                    processed + basename +"_trimmed.fastq.gz ILLUMINACLIP:" + aux_files + "/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:35" +" >" + log + sub + "_" + basename + "_trimmomatic.txt" + " 2>&1", shell=True)
+                    subprocess.call("echo java -jar " + program +
+                    "trimmomatic-0.36.jar PE -phred33 " +
+                    fulldir + fileR1 + " " + fulldir + fileR2 + " -baseout " +
+                    processed + basename +"_trimmed.fastq.gz ILLUMINACLIP:" +
+                    aux + "/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:35" +
+                    " > " + log + "_" + basename + "_trimmomatic.txt" +
+                     " 2>&1", shell=True)
     finally:
         l.release()
 
