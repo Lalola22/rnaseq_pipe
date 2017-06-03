@@ -70,8 +70,8 @@ def call_trimmomatic_par(l, subdir):
                     fulldir + fileR1 + " " + fulldir + fileR2 + " -baseout " +
                     processed + basename +"_trimmed.fastq.gz ILLUMINACLIP:" +
                     aux + "/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:35" +
-                    " > " + log + "_" + basename + "_trimmomatic.txt" +
-                     " 2>&1", shell=True)
+                    # " > " + log + "_" + basename + "_trimmomatic.txt" +" 2>&1",
+                    shell=True)
     finally:
         l.release()
 
