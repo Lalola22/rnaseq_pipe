@@ -9,7 +9,7 @@ basedir is the top level output dir
 inputdirectory should contain all folders with .fastq.gz reads to be processed
 processed is where the trimmed read files will go
 log is self explanatory
-program is directory for trimmomatic jar file
+trim is directory for trimmomatic jar file
 
 An example pair of files is:
 
@@ -38,7 +38,7 @@ from multiprocessing import Process, Lock
 
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
-program = sys.argv[3]
+trim = sys.argv[3]
 processed = basedir + "batch_trim/processed/"
 log = basedir + "batch_trim/log/"
 aux = "aux_files/"
@@ -65,7 +65,7 @@ def call_trimmomatic_par(l, subdir):
                 if os.path.isfile(fulldir + fileR2):
                     dividing1 = fileR2.split(".")
                     basename = dividing[0].replace("_R1", "")  # This is the forward read sans extensions
-                    subprocess.call("echo java -jar " + program +
+                    subprocess.call("echo java -jar " + trim +
                     "trimmomatic-0.36.jar PE -phred33 " +
                     fulldir + fileR1 + " " + fulldir + fileR2 + " -baseout " +
                     processed + basename +"_trimmed.fastq.gz ILLUMINACLIP:" +
