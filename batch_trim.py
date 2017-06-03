@@ -84,8 +84,6 @@ if __name__ == "__main__":
     # --- check dors and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
-    if not os.path.exists(log):
-        os.makedirs(log)
     # --- loop for call to trimmomatic
     for sub in os.listdir(inputdirectory):
         if os.path.isdir(inputdirectory + sub):
