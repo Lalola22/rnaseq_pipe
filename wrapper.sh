@@ -45,7 +45,7 @@ echo "Inital read QC..."
 
 mkdir -p "${outDir}/fastqc/raw"
 
-fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
+echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 
 # Adaptor trimming
