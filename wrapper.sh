@@ -34,6 +34,8 @@ oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
+export PATH=${PWD}:$PATH
+
 # Pre-trim QC
 
 echo "Inital read QC..."
