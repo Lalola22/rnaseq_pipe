@@ -32,7 +32,7 @@ def salmon_call(read1):
     dividing = read1.split(".")
     basename = dividing[0].replace("1P", "")
     read2 = read1.replace("1P", "2P")
-    subprocess.call(" echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
+    subprocess.call("echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
         "-l A --numBootstraps 100 -1 " + inputdirectory + read1 + " -2 " +
         inputdirectory + read2 + " -p " + max_threads + " -o " + basename +
         " >" + log + time.strftime("%Y%m%d") + "_" + basename + ".txt" + " 2>&1",
