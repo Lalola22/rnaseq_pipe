@@ -28,7 +28,7 @@ then
     echo mkdir $outDir
 fi
 
-fastqArray=($(find $rawDIR -type f -name "*.fastq.gz"))
+fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
 
 oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
@@ -48,7 +48,7 @@ fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 echo "Trimming adaptors..."
 echo "Outputs will be sent to log"
 
-echo python3 batch_trim.py "${outDir}/" "$rawDIR" "$trimmomaticPath"
+echo python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
 ### trimmomatic .fa files needs to be added to aux_files
 
 
