@@ -3,7 +3,7 @@ created 09/05/17
 # Purpose
 
 - Parallel execution of "Kallisto" for alignment and quant
-        The bootstrapping is being run in parallel as opposed to each kallisto call
+    The bootstrapping is being run in parallel as opposed to each kallisto call
 - reference transcriptome should be placed within the kallisto folder
 
 basedir is the top level output dir
