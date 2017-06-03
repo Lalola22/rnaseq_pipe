@@ -30,7 +30,7 @@ Calls trimmomatic with the following parameters
 # --- packages
 import os
 import sys
-import subprocess
+from subprocess import call
 
 from multiprocessing import Process, Lock
 
@@ -67,7 +67,7 @@ def call_trimmomatic_par(l, subdir):
                 if os.path.isfile(fulldir + fileR2):
                     basename = dividing[0].replace("_R1", "")
                     # This is the forward read sans extensions
-                    subprocess.call("echo java -jar " + trim +
+                    call("echo java -jar " + trim +
                         "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
                         " " + fulldir + fileR2 + " -baseout " + processed +
                         basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +

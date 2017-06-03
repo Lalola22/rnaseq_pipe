@@ -53,7 +53,7 @@ echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 echo "Trimming adaptors..."
 echo "Outputs will be sent to log"
 
-python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
+python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/"
 ### trimmomatic .fa files needs to be added to aux_files
 
 
