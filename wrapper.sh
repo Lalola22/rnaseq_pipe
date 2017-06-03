@@ -45,7 +45,7 @@ echo "Inital read QC..."
 
 mkdir -p "${outDir}/fastqc/raw"
 
-echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
+fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 
 # Adaptor trimming
@@ -53,7 +53,7 @@ echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 echo "Trimming adaptors..."
 echo "Outputs will be sent to log"
 
-echo python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
+python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
 ### trimmomatic .fa files needs to be added to aux_files
 
 
@@ -61,11 +61,11 @@ echo python3 batch_trim.py "${outDir}/" "$rawDir" "$trimmomaticPath"
 
 echo "Post trim read QC"
 
-echo fastqArrayTrim=($(find "${outDir}/batch_trim/processed" -type f -name "*P.fastq.gz"))
+fastqArrayTrim=($(find "${outDir}/batch_trim/processed" -type f -name "*P.fastq.gz"))
 
 mkdir -p "${outDir}/fastqc/trimmed"
 
-echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
+fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # kallisto index
 
