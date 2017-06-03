@@ -40,7 +40,9 @@ export PATH=${PWD}:$PATH
 
 echo "Inital read QC..."
 
-fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
+mkdir "${outDir}/fastqc/raw"
+
+echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 
 # Adaptor trimming
