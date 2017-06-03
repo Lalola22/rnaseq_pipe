@@ -39,8 +39,7 @@ from multiprocessing import Process, Lock
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
 trim = sys.argv[3]
-processed = basedir + "batch_trim/processed/"
-log = basedir + "batch_trim/log/"
+processed = basedir + "batch_trim/"
 aux = "aux_files/"
 
 # --- code body
@@ -72,8 +71,7 @@ def call_trimmomatic_par(l, subdir):
                         " " + fulldir + fileR2 + " -baseout " + processed +
                         basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
                         "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
-                        "SLIDINGWINDOW:4:15 MINLEN:35",  # +
-                        # " >" + log + sub + "_" + basename + "_trimmomatic.txt" + " 2>&1"
+                        "SLIDINGWINDOW:4:15 MINLEN:35",
                         shell=True)
     finally:
         l.release()
