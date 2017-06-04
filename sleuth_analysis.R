@@ -16,10 +16,10 @@
 library(tidyverse)
 library(sleuth)
 library(stringr)
+library(biomaRt)
 
 
-#  Set number of cores available for sleuth
-options(mc.cores = 16L) # set number of cores sleuth will use
+
 ## change this back to 16 later.
 ## commandline arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -29,13 +29,13 @@ if (length(args) < 6) {
 }
 basedir    <- args[1]
 outdir     <- args[2]
-max_cores  <- args[3]
+max_cores  <- as.numeric(args[3])
 treatment <- args[4]
 control <- args[5]
-replicates <- args[6]
+replicates <- as.numeric(args[6])
 
-
-options(mc.cores = paste(max_cores, "L", sep = ""))
+#  Set number of cores available for sleuth
+options(mc.cores = max_cores)
 
 
 # complete output directory name ------------------------------------------
@@ -51,14 +51,12 @@ colnames(sample_table) <- c("sample", "condition", "path")
 sample_table$condition <- (c(rep(treatment, replicates),
                             rep(control, replicates)))
 
-c <-  0
-for (n in c(1:3, 1:3)){
-  c <- c + 1
-  sample_table$sample[c] <- paste(sample_table$condition[c], "_", n, sep = "" )
-  sample_table$path[c]   <- file.path(basedir, sample_table$sample[c])
-    }
-rm(c)
-## rename the sample names so they're more readable
+sample_table <- sample_table %>%
+  mutate(sample = c(1:replicates,
+                    1:replicates)) %>%
+  mutate(sample = paste(condition, sample, sep = "_")) %>%
+  mutate(path = file.path(basedir, sample))
+
 
 
 ## print to display as a check while program runs

@@ -90,15 +90,15 @@ export PATH=${PWD}:$PATH
 #
 # Salmon quant
 
-echo "Salmon quantifications..."
-
-python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-
-# Salmon prep with Wasabi
-
-echo "Wasabi-ing that Salmon"
-
-Rscript wasabi.R "${outDir}/salmon"
+# echo "Salmon quantifications..."
+# 
+# python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+# 
+# # Salmon prep with Wasabi
+# 
+# echo "Wasabi-ing that Salmon"
+# 
+# Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
@@ -110,7 +110,7 @@ echo "Sleuthing around kallisto..."
 # i starts at one to avoid header
 for ((i = 1; i <= max_index; i++)); do
   echo "Running sleuth for: " "${samples[i]}"
-  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
+  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
   "$cores" ${samples[i]}
 done
 
@@ -124,6 +124,5 @@ for ((i = 1; i <= max_index; i++)); do
   "$cores" ${samples[i]}
 done
 
-# Create heatmaps
 
 echo "Finished at" $(date)
