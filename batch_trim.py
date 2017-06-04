@@ -69,7 +69,7 @@ def call_trimmomatic_par(subdir):
                 call("java -jar " + trim +
                     "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
                     " " + fulldir + fileR2 + " -baseout " + processed +
-                    basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
+                    basename + ".fastq.gz ILLUMINACLIP:" + aux +
                     "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
                     "SLIDINGWINDOW:4:15 MINLEN:35",
                     shell=True)
