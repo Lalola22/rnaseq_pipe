@@ -10,7 +10,7 @@ All programs used need to be added to the PATH
 
 The call to generate the data for the paper was
 
-`./wrapper.sh "/home/slee/data/test_data" "/home/slee/outputs/bcl6_paper_test" "18"`
+`./wrapper.sh "/home/slee/data/test_data" "/home/slee/outputs/bcl6_paper_test" "18" | tee log.txt`
 
 ### extra_paths.txt
 
