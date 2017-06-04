@@ -52,7 +52,7 @@ echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 echo "Trimming adaptors..."
 
-python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
+echo python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
 ### trimmomatic .fa files needs to be added to aux_files
 
 
@@ -70,25 +70,25 @@ fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 echo "Creating the kallisto index..."
 
-echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
+kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
 
 # kallisto quant
 
 echo "Kallisto quantifications..."
 
-echo kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon index
 
 echo "Creating the Salmon index..."
 
-echo salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
+salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
 
 # Salmon quant
 
 echo "Salmon quantifications..."
 
-echo salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon prep with Wasabi
 
