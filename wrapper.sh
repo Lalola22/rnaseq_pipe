@@ -75,9 +75,8 @@ echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
 # kallisto quant
 
 echo "Kallisto quantifications..."
-echo "Outputs will be sent to log"
 
-echo kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
+echo kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon index
 
@@ -88,15 +87,14 @@ echo salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.id
 # Salmon quant
 
 echo "Salmon quantifications..."
-echo "Outputs will be sent to log"
 
-echo salmon_quant.py "${outDir}/" "${outDir}/batch_trim/processed/" "$cores"
+echo salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon prep with Wasabi
 
 echo "Wasabi-ing that Salmon"
 
-echo Rscript wasabi.R "${outDir}/salmon/processed"
+echo Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
