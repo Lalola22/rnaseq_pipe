@@ -54,7 +54,7 @@ def call_trimmomatic_par(subdir):
     call in a loop (or another function) to loop through each
     dir for different classes
     """
-    l.acquire()
+    # l.acquire()
     try:
         fulldir = inputdirectory + subdir + "/"  # construct full path
         try:
@@ -76,7 +76,7 @@ def call_trimmomatic_par(subdir):
                         "SLIDINGWINDOW:4:15 MINLEN:35",
                         shell=True)
     finally:
-        l.release()
+        # l.release()
 
 # --- __main__ call
 
