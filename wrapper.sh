@@ -45,60 +45,60 @@ export PATH=${PWD}:$PATH
 
 # Pre-trim QC
 
-echo "Inital read QC..."
-
-mkdir -p "${outDir}/fastqc/raw"
-
-fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
-
-
-# Adaptor trimming
-
-echo "Trimming adaptors..."
-
-python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
-### trimmomatic .fa files needs to be added to aux_files
-
-
-# Trimmed read QC
-
-echo "Post-trimming read QC"
-
-fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
-
-mkdir -p "${outDir}/fastqc/trimmed"
-
-fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
-
-# kallisto index
-
-echo "Creating the kallisto index..."
-
-kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
-
-# kallisto quant
-
-echo "Kallisto quantifications..."
-
-python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-
-# Salmon index
-
-echo "Creating the Salmon index..."
-
-salmon index -t "$GRCh38trans" -i "aux_files/GRCh38transcriptome_sal.idx"
-
-# Salmon quant
-
-echo "Salmon quantifications..."
-
-python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-
-# Salmon prep with Wasabi
-
-echo "Wasabi-ing that Salmon"
-
-Rscript wasabi.R "${outDir}/salmon"
+# echo "Inital read QC..."
+#
+# mkdir -p "${outDir}/fastqc/raw"
+#
+# fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
+#
+#
+# # Adaptor trimming
+#
+# echo "Trimming adaptors..."
+#
+# python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
+# ### trimmomatic .fa files needs to be added to aux_files
+#
+#
+# # Trimmed read QC
+#
+# echo "Post-trimming read QC"
+#
+# fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
+#
+# mkdir -p "${outDir}/fastqc/trimmed"
+#
+# fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
+#
+# # kallisto index
+#
+# echo "Creating the kallisto index..."
+#
+# kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
+#
+# # kallisto quant
+#
+# echo "Kallisto quantifications..."
+#
+# python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+#
+# # Salmon index
+#
+# echo "Creating the Salmon index..."
+#
+# salmon index -t "$GRCh38trans" -i "aux_files/GRCh38transcriptome_sal.idx"
+#
+# # Salmon quant
+#
+# echo "Salmon quantifications..."
+#
+# python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+#
+# # Salmon prep with Wasabi
+#
+# echo "Wasabi-ing that Salmon"
+#
+# Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
@@ -111,7 +111,7 @@ echo "Sleuthing around kallisto..."
 for ((i = 1; i <= max_index; i++)); do
   echo "Running sleuth for: " "${samples[i]}"
   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
-  "$cores" "${samples[i]}"
+  "$cores" ${samples[i]}
 done
 
 # Sleuth analysis for Salmon
@@ -121,7 +121,7 @@ echo "Sleuthing around Salmon..."
 for ((i = 1; i <= max_index; i++)); do
   echo "Running sleuth for: " "${samples[i]}"
   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
-  "$cores" "${samples[i]}"
+  "$cores" ${samples[i]}
 done
 
 # Create heatmaps
