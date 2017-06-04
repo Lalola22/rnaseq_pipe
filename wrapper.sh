@@ -34,6 +34,10 @@ oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
+oldIFS="$IFS"
+IFS=$'\n' samples=($(<"sleuth_samples.txt"))
+IFS="$oldIFS"
+
 trimmomaticPath=${extraPaths[0]}
 GRCh38trans=${extraPaths[1]}
 
@@ -45,32 +49,32 @@ echo "Inital read QC..."
 
 mkdir -p "${outDir}/fastqc/raw"
 
-echo fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
+fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 
 # Adaptor trimming
 
 echo "Trimming adaptors..."
 
-echo python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
+python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
 ### trimmomatic .fa files needs to be added to aux_files
 
 
 # Trimmed read QC
 
-echo "Post trim read QC"
+echo "Post-trimming read QC"
 
 fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
 
 mkdir -p "${outDir}/fastqc/trimmed"
 
-echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
+fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # kallisto index
 
 echo "Creating the kallisto index..."
 
-echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
+kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
 
 # kallisto quant
 
@@ -82,7 +86,7 @@ python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 echo "Creating the Salmon index..."
 
-salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
+salmon index -t "$GRCh38trans" -i "aux_files/GRCh38transcriptome_sal.idx"
 
 # Salmon quant
 
@@ -98,10 +102,28 @@ Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
-echo sleuth_wrapper.sh "in" "out"
+echo "Sleuthing around kallisto..."
+
+# make array with comparisons as each element
+((n_elements=${#samples[@]}, max_index=n_elements - 1))
+
+# i starts at one to avoid header
+for ((i = 1; i <= max_index; i++)); do
+  echo "Running sleuth for: " "${samples[i]}"
+  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
+  "$cores" "${samples[i]}"
+done
 
 # Sleuth analysis for Salmon
 
-echo sleuth_wrapper.sh "in" "out"
+echo "Sleuthing around Salmon..."
+
+for ((i = 1; i <= max_index; i++)); do
+  echo "Running sleuth for: " "${samples[i]}"
+  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
+  "$cores" "${samples[i]}"
+done
 
 # Create heatmaps
+
+echo "Finished at" $(date)
