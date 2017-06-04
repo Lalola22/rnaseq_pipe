@@ -88,17 +88,17 @@ export PATH=${PWD}:$PATH
 #
 # salmon index -t "$GRCh38trans" -i "aux_files/GRCh38transcriptome_sal.idx"
 #
-# # Salmon quant
-#
-# echo "Salmon quantifications..."
-#
-# python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-#
-# # Salmon prep with Wasabi
-#
-# echo "Wasabi-ing that Salmon"
-#
-# Rscript wasabi.R "${outDir}/salmon"
+# Salmon quant
+
+echo "Salmon quantifications..."
+
+python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+
+# Salmon prep with Wasabi
+
+echo "Wasabi-ing that Salmon"
+
+Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
