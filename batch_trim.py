@@ -76,6 +76,7 @@ def call_trimmomatic_par(subdir):
                         "SLIDINGWINDOW:4:15 MINLEN:35",
                         shell=True)
     finally:
+        pass
         # l.release()
 
 # --- __main__ call
