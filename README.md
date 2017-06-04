@@ -12,7 +12,7 @@ All programs used need to be added to the PATH
 
 The call to generate the data for the paper was
 
-`./wrapper.sh "/home/slee/data/test_data" "/home/slee/outputs/bcl6_paper_test" "18" | tee log.txt`
+`./wrapper.sh "/home/slee/data/bcl6_raw" "/home/slee/outputs/bcl6_paper" "18" | tee log.txt`
 
 ### extra_paths.txt
 
