@@ -8,6 +8,8 @@ All programs used need to be added to the PATH
 
 ### Usage
 
+`./wrapper.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
+
 The call to generate the data for the paper was
 
 `./wrapper.sh "/home/slee/data/test_data" "/home/slee/outputs/bcl6_paper_test" "18" | tee log.txt`
