@@ -18,3 +18,7 @@ This file should contain the following paths with trailing `/`
 
 * path to trimmomatic directory
 * path to the reference transcriptome
+
+### sleuth_samples.txt
+
+This is a TSV file that contains the different comparisons that should be made within sleuth for both of the Salmon and kallisto data. Column one is the treatment and column two the control.
