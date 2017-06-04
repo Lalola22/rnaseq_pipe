@@ -24,14 +24,15 @@ options(mc.cores = 16L) # set number of cores sleuth will use
 ## commandline arguments
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument: if not, return an error
-if (length(args) < 5) {
-  stop("Five arguments must be supplied (input file).n", call. = FALSE)
+if (length(args) < 6) {
+  stop("Six arguments must be supplied.", call. = FALSE)
 }
 basedir    <- args[1]
 outdir     <- args[2]
 max_cores  <- args[3]
 treatment <- args[4]
 control <- args[5]
+replicates <- args[6]
 
 
 options(mc.cores = paste(max_cores, "L", sep = ""))
@@ -44,10 +45,11 @@ outdir <- file.path(outdir, paste(treatment, control, sep = "_"))
 
 # sample table construction -----------------------------------------------
 
-sample_table <- as.data.frame(matrix("", nrow = 6, ncol = 3),
+sample_table <- as.data.frame(matrix("", nrow = replicates * 2, ncol = 3),
                                      stringsAsFactors = FALSE)
 colnames(sample_table) <- c("sample", "condition", "path")
-sample_table$condition <- (c(rep(treatment, 3), rep(control, 3)))
+sample_table$condition <- (c(rep(treatment, replicates),
+                            rep(control, replicates)))
 
 c <-  0
 for (n in c(1:3, 1:3)){
