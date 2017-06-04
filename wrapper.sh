@@ -94,7 +94,7 @@ python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 echo "Wasabi-ing that Salmon"
 
-echo Rscript wasabi.R "${outDir}/salmon"
+Rscript wasabi.R "${outDir}/salmon"
 
 # Sleuth analysis for kallisto
 
