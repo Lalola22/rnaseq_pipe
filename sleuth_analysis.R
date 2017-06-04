@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 # Base R script for sleuth analysis
 # Sam Lee
-# 11/05/17
+# Created 04/06/17
 
 # Usage
 
-# sleuth_basic.R "path/to/kallisto/files/" "condition1" "condition 2" path/to/outputs/"
+# sleuth_basic.R "path/to/kallisto/files/" "treatment" "condition 2" path/to/outputs/"
 # assumes three samples per condition, only two conditions
 # also outs diagnostic and analytic plots of the seluth data
 
@@ -13,7 +13,7 @@
 
 # source required packages
 ### need to go through all the effort of re sorting the packages
-source("https://bioconductor.org/biocLite.R")
+library(tidyverse)
 library(sleuth)
 library(stringr)
 
@@ -24,34 +24,22 @@ options(mc.cores = 16L) # set number of cores sleuth will use
 ## commandline arguments
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument: if not, return an error
-if (length(args) < 3) {
-  stop("At least three arguments must be supplied (input file).n", call. = FALSE)
-} else if (length(args) == 3) {
-  # default output dir
-  args[4] <- "~/outputs/"
+if (length(args) < 5) {
+  stop("Five arguments must be supplied (input file).n", call. = FALSE)
 }
 basedir    <- args[1]
-condition1 <- args[2]
-condition2 <- args[3]
-outdir     <- args[4]
+outdir     <- args[2]
+max_cores  <- args[3]
+treatment <- args[4]
+control <- args[5]
 
-# test parameters
-# stop("Test parameters being used!!")
-# basedir    <- "/home/slee/outputs/kallisto/processed/"
-# condition1 <- "DMSO"
-# condition2 <- "Untreated"
-# outdir     <- "/home/slee/outputs/sleuth/"
+
+options(mc.cores = paste(max_cores, "L", sep = ""))
 
 
 # complete output directory name ------------------------------------------
 
-outdir <- file.path(outdir, paste(condition1, condition2, sep = "_"))
-
-# create object that has sample paths ------------------
-# kal_paths <- list.dirs(basedir, full.names = TRUE)
-# kal_paths <- c(kal_paths[grep(x= kal_paths, pattern = condition2)] ,kal_paths[grep(x= kal_paths, pattern = condition1)])
-
-
+outdir <- file.path(outdir, paste(treatment, control, sep = "_"))
 
 
 # sample table construction -----------------------------------------------
@@ -59,7 +47,7 @@ outdir <- file.path(outdir, paste(condition1, condition2, sep = "_"))
 sample_table <- as.data.frame(matrix("", nrow = 6, ncol = 3),
                                      stringsAsFactors = FALSE)
 colnames(sample_table) <- c("sample", "condition", "path")
-sample_table$condition <- (c(rep(condition1, 3), rep(condition2, 3)))
+sample_table$condition <- (c(rep(treatment, 3), rep(control, 3)))
 
 c <-  0
 for (n in c(1:3, 1:3)){
@@ -78,7 +66,7 @@ print(sample_table)
 ## check that all dirs in the table exist and exit if not
 dircheck <- all(dir.exists(sample_table$path))
 if (! dircheck == TRUE){
-  stop("All the kallisto output directories for the conditions do not exist.")
+  stop("All the quantification directories for the conditions do not exist.")
 }
 
 
@@ -103,13 +91,13 @@ so <- sleuth_prep(sample_table, ~ condition, target_mapping = t2g)
 so <- sleuth_fit(so)
 so <- sleuth_fit(so, ~1, "reduced")
 
-so <- sleuth_wt(so, paste("condition", condition2, sep = ""))
+so <- sleuth_wt(so, paste("condition", control, sep = ""))
 print("Wald test completed...", quote = FALSE)
 
 # make and save results table ---------------------------------------------
 dir.create(outdir, recursive = TRUE) # will show a warning if this exists...
-results_table <- sleuth_results(so, paste("condition", condition2, sep = ""))
-write.csv(file = file.path(outdir, "sleuth_results.csv"), x = results_table)
+results_table <- sleuth_results(so, paste("condition", control, sep = ""))
+write_csv(file = file.path(outdir, "sleuth_results.csv"), x = results_table)
 
 
 # Sleuth plots --------------------------------------------------------
@@ -118,12 +106,12 @@ print("making graphs now...", quote = FALSE)
 
 # MA plot
 pdf(file.path(outdir, "MA_plot.pdf"), width = 7, height = 4)
-plot_ma(so, paste("condition",condition2,sep = ""))
+plot_ma(so, paste("condition",control, sep = ""))
 dev.off()
 
 # qq plot
 pdf(file.path(outdir, "qq_plot.pdf"), width = 7, height = 4)
-plot_qq(so, paste("condition", condition2, sep = ""))
+plot_qq(so, paste("condition", control, sep = ""))
 dev.off()
 
 # PCA
@@ -148,7 +136,7 @@ dev.off()
 
 # volcano plot
 pdf(file.path(outdir, "volcano_plot.pdf"), width = 7, height = 4)
-plot_volcano(so, paste("condition", condition2, sep = ""))
+plot_volcano(so, paste("condition", control, sep = ""))
 dev.off()
 
 # top-20 heatmap
