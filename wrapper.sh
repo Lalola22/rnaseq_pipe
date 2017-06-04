@@ -64,19 +64,19 @@ fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
 
 mkdir -p "${outDir}/fastqc/trimmed"
 
-fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
+echo fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # kallisto index
 
 echo "Creating the kallisto index..."
 
-kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
+echo kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
 
 # kallisto quant
 
 echo "Kallisto quantifications..."
 
-kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon index
 
@@ -88,7 +88,7 @@ salmon index -t "${extraPaths[1]}" -i "aux_files/GRCh38transcriptome_sal.idx"
 
 echo "Salmon quantifications..."
 
-salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # Salmon prep with Wasabi
 
