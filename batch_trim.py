@@ -47,7 +47,7 @@ aux = "aux_files/"
 # --- code body
 
 
-def call_trimmomatic_par(l, subdir):
+def call_trimmomatic_par(subdir):
     """
     call wrapper for trimmomatic for trimming of adaptors sequences
     designed to be able to be called for parallel processing
@@ -90,4 +90,4 @@ if __name__ == "__main__":
     # for sub in os.listdir(inputdirectory):
         # if os.path.isdir(inputdirectory + sub):
         #     Process(target=call_trimmomatic_par, args=(lock, sub)).start()
-    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) )
+    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory))
