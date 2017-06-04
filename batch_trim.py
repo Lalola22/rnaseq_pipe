@@ -66,7 +66,7 @@ def call_trimmomatic_par(subdir):
             if os.path.isfile(fulldir + fileR2):
                 basename = dividing[0].replace("_R1", "")
                 # This is the forward read sans extensions
-                call("java -jar " + trim +
+                call("echo java -jar " + trim +
                     "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
                     " " + fulldir + fileR2 + " -baseout " + processed +
                     basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     if not os.path.exists(processed):
         os.makedirs(processed)
     #  call the func in parallel, as many cores as indicated
-    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory))
+    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) if os.path.isdir(sub))
