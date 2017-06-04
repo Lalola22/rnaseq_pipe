@@ -43,7 +43,7 @@ GRCh38trans=${extraPaths[1]}
 
 export PATH=${PWD}:$PATH
 
-Pre-trim QC
+# Pre-trim QC
 
 echo "Inital read QC..."
 
