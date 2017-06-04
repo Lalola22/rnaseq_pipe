@@ -32,8 +32,8 @@ def salmon_call(read1):
     read2 = read1.replace("1P", "2P")
     call("echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
         "-l A --numBootstraps 100 -1 " + inputdirectory + read1 + " -2 " +
-        inputdirectory + read2 + " -p " + max_threads + " -o " + basename,
-        shell=True)
+        inputdirectory + read2 + " -p " + max_threads + " -o " +processed +
+        basename, shell=True)
 
 # --- main call
 
