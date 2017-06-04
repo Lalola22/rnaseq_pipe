@@ -54,30 +54,26 @@ def call_trimmomatic_par(subdir):
     call in a loop (or another function) to loop through each
     dir for different classes
     """
-    # l.acquire()
+    fulldir = inputdirectory + subdir + "/"  # construct full path
     try:
-        fulldir = inputdirectory + subdir + "/"  # construct full path
-        try:
-            os.path.isdir(fulldir)
-        except Exception as e:
-            print("{} is not a directory".format(fulldir))
-        for fileR1 in os.listdir(fulldir):
-            dividing = fileR1.split(".")
-            if "R1" in fileR1:  # select forward read files to loop through
-                fileR2 = fileR1.replace("R1", "R2")
-                if os.path.isfile(fulldir + fileR2):
-                    basename = dividing[0].replace("_R1", "")
-                    # This is the forward read sans extensions
-                    call("java -jar " + trim +
-                        "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
-                        " " + fulldir + fileR2 + " -baseout " + processed +
-                        basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
-                        "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
-                        "SLIDINGWINDOW:4:15 MINLEN:35",
-                        shell=True)
-    finally:
-        pass
-        # l.release()
+        os.path.isdir(fulldir)
+    except Exception as e:
+        print("{} is not a directory".format(fulldir))
+    for fileR1 in os.listdir(fulldir):
+        dividing = fileR1.split(".")
+        if "R1" in fileR1:  # select forward read files to loop through
+            fileR2 = fileR1.replace("R1", "R2")
+            if os.path.isfile(fulldir + fileR2):
+                basename = dividing[0].replace("_R1", "")
+                # This is the forward read sans extensions
+                call("java -jar " + trim +
+                    "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
+                    " " + fulldir + fileR2 + " -baseout " + processed +
+                    basename + "_trimmed.fastq.gz ILLUMINACLIP:" + aux +
+                    "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
+                    "SLIDINGWINDOW:4:15 MINLEN:35",
+                    shell=True)
+
 
 # --- __main__ call
 
@@ -87,8 +83,5 @@ if __name__ == "__main__":
     # --- check dirs and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
-    # --- loop for call to trimmomatic
-    # for sub in os.listdir(inputdirectory):
-        # if os.path.isdir(inputdirectory + sub):
-        #     Process(target=call_trimmomatic_par, args=(lock, sub)).start()
+    #  call the func in parallel, as many cores as indicated
     Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory))
