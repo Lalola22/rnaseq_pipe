@@ -11,10 +11,9 @@ within the top level output dir.
 
 # --- packages
 
-import time
 import os
 import sys
-import subprocess
+from subprocess import call
 
 
 # --- variables using sys.argv
@@ -22,8 +21,7 @@ import subprocess
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
 max_threads = sys.argv[3]
-processed = basedir + "salmon/processed/"
-log = basedir + "salmon/log/"
+processed = basedir + "salmon/"
 
 
 # --- functions
@@ -32,10 +30,9 @@ def salmon_call(read1):
     dividing = read1.split(".")
     basename = dividing[0].replace("1P", "")
     read2 = read1.replace("1P", "2P")
-    subprocess.call("echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
+    call("echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
         "-l A --numBootstraps 100 -1 " + inputdirectory + read1 + " -2 " +
-        inputdirectory + read2 + " -p " + max_threads + " -o " + basename +
-        " >" + log + time.strftime("%Y%m%d") + "_" + basename + ".txt" + " 2>&1",
+        inputdirectory + read2 + " -p " + max_threads + " -o " + basename,
         shell=True)
 
 # --- main call
@@ -44,13 +41,11 @@ if __name__ == "__main__":
     # --- check dirs and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
-    if not os.path.exists(log):
-        os.makedirs(log)
     # --- create list of read1 pair file names
     read_list = []
     for fname in os.listdir(inputdirectory):
         if "1P" in fname:
             read_list.append(fname)
-    # --- call kallisto_call on each read pair in parallel
+    # --- salmon_call on each read pair sequentially
     for read in read_list:
         salmon_call(read)
