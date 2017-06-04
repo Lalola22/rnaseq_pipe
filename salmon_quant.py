@@ -28,11 +28,11 @@ processed = basedir + "salmon/"
 
 def salmon_call(read1):
     dividing = read1.split(".")
-    basename = dividing[0].replace("1P", "")
+    basename = dividing[0].replace("_1P", "")
     read2 = read1.replace("1P", "2P")
     call("echo salmon quant -i aux_files/GRCh38transcriptome_sal.idx " +
         "-l A --numBootstraps 100 -1 " + inputdirectory + read1 + " -2 " +
-        inputdirectory + read2 + " -p " + max_threads + " -o " +processed +
+        inputdirectory + read2 + " -p " + max_threads + " -o " + processed +
         basename, shell=True)
 
 # --- main call

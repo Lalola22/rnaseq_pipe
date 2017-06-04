@@ -35,8 +35,7 @@ from subprocess import call
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
 max_threads = sys.argv[3]
-processed = basedir + "kallisto/processed/"
-log = basedir + "kallisto/log/"
+processed = basedir + "kallisto/"
 
 
 # --- functions
@@ -51,7 +50,7 @@ def kallisto_call(read1):
     also review how to actually do this... current way does not seem to.
     """
     dividing = read1.split(".")
-    basename = dividing[0].replace("1P", "")
+    basename = dividing[0].replace("_1P", "")
     read2 = read1.replace("1P", "2P")
     call("kallisto quant -i aux_files/GRCh38transcriptome_kal.idx -t " +
         max_threads + " -o " + processed + basename + " -b 100 " +
@@ -64,8 +63,6 @@ if __name__ == "__main__":
     # --- check dirs and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
-    if not os.path.exists(log):
-        os.makedirs(log)
     # --- create list of read1 pair file names
     read_list = []
     for fname in os.listdir(inputdirectory):
