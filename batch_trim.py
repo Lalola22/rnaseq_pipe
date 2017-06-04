@@ -84,4 +84,4 @@ if __name__ == "__main__":
     if not os.path.exists(processed):
         os.makedirs(processed)
     #  call the func in parallel, as many cores as indicated
-    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) if os.path.isdir(sub))
+    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) if os.path.isdir(inputdirectory + sub))
