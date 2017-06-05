@@ -52,7 +52,9 @@ def kallisto_call(read1):
     dividing = read1.split(".")
     basename = dividing[0].replace("_1P", "")
     read2 = read1.replace("1P", "2P")
-    call("kallisto quant -i aux_files/GRCh38transcriptome_kal.idx -t " +
+    call(
+        "kallisto quant -i " + basedir +
+        "reference_files/GRCh38transcriptome_kal.idx -t " +
         max_threads + " -o " + processed + basename + " -b 100 " +
         inputdirectory + read1 + " " + inputdirectory + read2, shell=True)
 
