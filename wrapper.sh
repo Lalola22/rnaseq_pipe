@@ -120,7 +120,7 @@ echo "Sleuthing around Salmon..."
 
 for ((i = 1; i <= max_index; i++)); do
   echo "Running sleuth for: " "${samples[i]}"
-  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_salmon" \
+  Rscript sleuth_analysis.R "${outDir}/salmon" "${outDir}/sleuth_salmon" \
   "$cores" ${samples[i]}
 done
 
