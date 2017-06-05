@@ -97,8 +97,7 @@ print("Wald test completed...", quote = FALSE)
 # make and save results table ---------------------------------------------
 dir.create(outdir, recursive = TRUE) # will show a warning if this exists...
 results_table <- sleuth_results(so, paste("condition", control, sep = ""))
-write_csv(file = file.path(outdir, "sleuth_results.csv"), x = results_table)
-
+write_csv(results_table, file.path(outdir, "sleuth_results.csv"))
 
 # Sleuth plots --------------------------------------------------------
 print("making graphs now...", quote = FALSE)
