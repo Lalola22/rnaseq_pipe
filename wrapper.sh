@@ -22,13 +22,20 @@ then
 fi
 
 
-# environment prep
+# -- environment prep
+
+# make results directory if required
+
 if [ ! -d $outDir ]
 then
     echo mkdir $outDir
 fi
 
+# Initialise bash array with raw-read paths
+
 fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
+
+# Read the two auxillary file into bash arrays
 
 oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
@@ -38,12 +45,14 @@ oldIFS="$IFS"
 IFS=$'\n' samples=($(<"sleuth_samples.txt"))
 IFS="$oldIFS"
 
+# Set paths
+
 trimmomaticPath=${extraPaths[0]}
 GRCh38trans=${extraPaths[1]}
 
 export PATH=${PWD}:$PATH
 
-# Pre-trim QC
+# -- Pre-trim QC
 
 echo "Inital read QC..."
 
@@ -52,17 +61,18 @@ mkdir -p "${outDir}/fastqc/raw"
 fastqc -o "${outDir}/fastqc/raw" -t $cores ${fastqArray[@]]}
 
 
-# Adaptor trimming
+# -- Adaptor trimming
 
 echo "Trimming adaptors..."
 
 python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
-### trimmomatic .fa files needs to be added to aux_files
 
 
-# Trimmed read QC
+# -- Trimmed read QC
 
 echo "Post-trimming read QC"
+
+# Initialise bash array for trimmed + paired reads
 
 fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
 
@@ -70,51 +80,56 @@ mkdir -p "${outDir}/fastqc/trimmed"
 
 fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
-# kallisto index
+# -- kallisto index
 
 echo "Creating the kallisto index..."
 
-kallisto index -i "aux_files/GRCh38transcriptome_kal.idx" "$GRCh38trans"
+mkdir -p "${outDir}/reference_files"
 
-# kallisto quant
+kallisto index -i "${outDir}/reference_files/GRCh38transcriptome_kal.idx" \
+"$GRCh38trans"
+
+# -- kallisto quant
 
 echo "Kallisto quantifications..."
 
 python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
-# Salmon index
+# -- Salmon index
 
 echo "Creating the Salmon index..."
 
-salmon index -t "$GRCh38trans" -i "aux_files/GRCh38transcriptome_sal.idx"
+salmon index -t "$GRCh38trans" -i \
+"${outDir}/reference_files/GRCh38transcriptome_sal.idx"
 
-# Salmon quant
+# -- Salmon quant
 
 echo "Salmon quantifications..."
 
 python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
-# Salmon prep with Wasabi
+# -- Salmon prep with Wasabi
 
 echo "Wasabi-ing that Salmon"
 
 Rscript wasabi.R "${outDir}/salmon"
 
-# Sleuth analysis for kallisto
+# -- Sleuth analysis for kallisto
 
 echo "Sleuthing around kallisto..."
 
 # make array with comparisons as each element
+
 ((n_elements=${#samples[@]}, max_index=n_elements - 1))
 
-# i starts at one to avoid header
+# i starts at one to avoid header row
 for ((i = 1; i <= max_index; i++)); do
   echo "Running sleuth for: " "${samples[i]}"
   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
   "$cores" ${samples[i]}
 done
 
-# Sleuth analysis for Salmon
+# -- Sleuth analysis for Salmon
 
 echo "Sleuthing around Salmon..."
 
@@ -126,3 +141,7 @@ done
 
 
 echo "Finished at" $(date)
+
+echo "Results are in " ${outDir}
+
+echo "Check the FastQC results to ensure read quality was appropriate."
