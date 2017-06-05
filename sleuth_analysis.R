@@ -106,7 +106,7 @@ print("making graphs now...", quote = FALSE)
 
 # MA plot
 pdf(file.path(outdir, "MA_plot.pdf"), width = 7, height = 4)
-plot_ma(so, paste("condition",control, sep = ""))
+plot_ma(so, paste("condition", control, sep = ""))
 dev.off()
 
 # qq plot
