@@ -32,8 +32,8 @@ import os
 import sys
 from subprocess import call
 
-from multiprocessing import Process, Lock
-from joblib import Parallel, delayed
+# from multiprocessing import Process, Lock
+# from joblib import Parallel, delayed
 
 # --- variables using sys.argv
 
@@ -75,6 +75,23 @@ def call_trimmomatic_par(subdir):
                      shell=True)
 
 
+def call_trimmomatic(read1):
+    """
+    read 1 is the forward read of the pair to be trimmed
+
+    """
+    dividing = read1.split(".")
+    basename = dividing[0].replace("_R1", "")
+    call(
+         "java -jar " + trim + "trimmomatic-0.36.jar PE -phred33 + -threads " +
+         max_threads + " " + fulldir + read1 + " " + fulldir +
+         read1.replace("R1", "R2") + " -basout " + processed + basename +
+         ".fastq.gz ILLUMINACLIP:" + aux +
+         "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
+         "SLIDINGWINDOW:4:15 MINLEN:35",
+         shell=True
+    )
+
 # --- __main__ call
 
 
@@ -84,4 +101,12 @@ if __name__ == "__main__":
     if not os.path.exists(processed):
         os.makedirs(processed)
     #  call the func in parallel, as many cores as indicated
-    Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) if os.path.isdir(inputdirectory + sub))
+    # Parallel(n_jobs=max_threads)(delayed(call_trimmomatic_par)(sub) for sub in os.listdir(inputdirectory) if os.path.isdir(inputdirectory + sub))
+    for sub in os.listdir(inputdirectory):
+        read_list = []
+        fulldir = inputdirectory + sub + "/"
+        for fname in os.listdir(fulldir):
+            if "R1" in fname:
+                read_list.append(fname)
+        for read in read_list:
+            call_trimmomatic(read)
