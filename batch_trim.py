@@ -85,7 +85,7 @@ def call_trimmomatic(read1):
     call(
          "java -jar " + trim + "trimmomatic-0.36.jar PE -phred33 + -threads " +
          max_threads + " " + fulldir + read1 + " " + fulldir +
-         read1.replace("R1", "R2") + " -basout " + processed + basename +
+         read1.replace("R1", "R2") + " -baseout " + processed + basename +
          ".fastq.gz ILLUMINACLIP:" + aux +
          "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
          "SLIDINGWINDOW:4:15 MINLEN:35",
