@@ -57,16 +57,3 @@ export PATH=${PWD}:$PATH
 echo "Trimming adaptors..."
 
 python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
-
-
-# -- Trimmed read QC
-
-echo "Post-trimming read QC"
-
-# Initialise bash array for trimmed + paired reads
-
-fastqArrayTrim=($(find "${outDir}/batch_trim" -type f -name "*P.fastq.gz"))
-
-mkdir -p "${outDir}/fastqc/trimmed"
-
-fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
