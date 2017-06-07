@@ -96,7 +96,7 @@ def call_trimmomatic(read1):
 
 
 if __name__ == "__main__":
-    lock = Lock()
+    # lock = Lock()
     # --- check dirs and create if neccessary
     if not os.path.exists(processed):
         os.makedirs(processed)
