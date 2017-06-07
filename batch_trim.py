@@ -40,7 +40,7 @@ from subprocess import call
 basedir = sys.argv[1]
 inputdirectory = sys.argv[2]
 trim = sys.argv[3]
-max_threads = int(sys.argv[4])
+max_threads = sys.argv[4]
 processed = basedir + "batch_trim/"
 aux = "aux_files/"
 
