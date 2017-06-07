@@ -83,7 +83,7 @@ def call_trimmomatic(read1):
     dividing = read1.split(".")
     basename = dividing[0].replace("_R1", "")
     call(
-         "java -jar " + trim + "trimmomatic-0.36.jar PE -phred33 + -threads " +
+         "java -jar " + trim + "trimmomatic-0.36.jar PE -phred33 -threads " +
          max_threads + " " + fulldir + read1 + " " + fulldir +
          read1.replace("R1", "R2") + " -baseout " + processed + basename +
          ".fastq.gz ILLUMINACLIP:" + aux +
