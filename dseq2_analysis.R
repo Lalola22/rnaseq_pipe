@@ -11,12 +11,13 @@
 
 # Setup -------------------------------------------------------------------
 
-library(tidyverse)
-library(tximport)
-library(DESeq2)
-library(ensembldb)
-library(EnsDb.Hsapiens.v79)
-library(ReportingTools)
+library(tidyverse, quietly = TRUE)
+library(BiocParallel, quietly = TRUE)
+library(tximport, quietly = TRUE)
+library(DESeq2, quietly = TRUE)
+library(ensembldb, quietly = TRUE)
+library(EnsDb.Hsapiens.v79, quietly = TRUE)
+library(ReportingTools, quietly = TRUE)
 
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument: if not, return an error
@@ -34,7 +35,7 @@ replicates <- as.numeric(args[6])
 # Test values
 
 basedir <- "/home/slee/outputs/bcl6_paper/salmon"
-outdir <-  "/home/slee/outputs/test"
+outdir <-  "/home/slee/outputs/test/june_09"
 cores <- 8
 treatment <- "25uM"
 control <- "DMSO"
@@ -43,11 +44,18 @@ replicates <- 3
 # whether the results are for kallisto or sleuth data
 type <- basename(basedir)
 
+
+# if 25uM is the treatment
+# we want to call it FX1
 if (treatment == "25uM"){
   condt <- "FX1"
 } else {
   condt <- treatment
 }
+
+# Set number of cores for multi-processing
+
+register(MulticoreParam(cores))
 
 
 # sample table construction -----------------------------------------------
@@ -55,22 +63,23 @@ if (treatment == "25uM"){
 sample_table <- as.data.frame(matrix("", nrow = replicates * 2, ncol = 3),
                                      stringsAsFactors = FALSE)
 colnames(sample_table) <- c("sample", "condition", "path")
-sample_table$condition <- (c(rep(treatment, replicates),
-                            rep(control, replicates)))
+
 
 sample_table <- sample_table %>%
-  mutate(sample = c(1:replicates,
-                    1:replicates)) %>%
-  mutate(sample = paste(condition, sample, sep = "_")) %>%
-  mutate(path = file.path(basedir, sample))
+    mutate(
+        sample = paste(c(rep(treatment, replicates),
+                            rep(control, replicates)),
+                        c(1:replicates),
+                        sep = "_")
+        ) %>%
+    mutate(path = file.path(basedir, sample)) %>%
+    mutate(condition = as.factor(
+        c(rep(condt, replicates),
+          rep(control, replicates)))) %>%
+    mutate(condition = relevel(condition, condt))
 
-sample_table$condition <- (as.factor(c(rep(condt, replicates),
-                                       rep(control, replicates))))
-
-sample_table$condition <- relevel(sample_table$condition,
-                                  paste(condt, replicates, sep = "_") )
-
-rownames(sample_table) <- sample_table$sample
+## check if this is needed...
+# rownames(sample_table) <- sample_table$sample
 
 ## print to display as a check while program runs
 print("Sample table:", quote = FALSE)
@@ -91,7 +100,7 @@ k <- keys(txdb, keytype = "GENENAME")
 df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
 
-# make the file paths
+# make the quant file paths
 if (type == "kallisto"){
     files <- file.path(sample_table$path, "abundance.h5")
     names(files) <- sample_table$sample
@@ -118,13 +127,13 @@ ddsTxi <- DESeqDataSetFromTximport(txi,
 
 # DESeq2 -------------------------------------------------------------------
 
-dds <- DESeq(ddsTxi)
+dds <- DESeq(ddsTxi, parallel = TRUE)
 
 res <- results(dds)
 
 # order by padj
 
-resOrdered <- res[order(res$padj),]
+res_ordered <- res[order(res$padj),]
 
 # ReportingTools -------------------------------------------------------------------
 
@@ -151,7 +160,11 @@ plotMA(res, ylim = c(-2,2))
 dev.off()
 
 pdf(file.path(outdir, "FX1_DMSO_top_padj_counts.pdf"), width = 7, height = 4)
-plotCounts(dds, gene=which.min(res$padj), intgroup="condition")
+plotCounts(dds, gene = which.min(res$padj), intgroup = "condition")
 dev.off()
 
-write_csv(as.data.frame(resOrdered), path = file.path(outdir, "FX1_DMSO_deseq2_results.csv"))
+write.csv(
+    as.data.frame(res_ordered),
+    file = file.path(
+        outdir,
+        paste(condt, control, "tx_deseq2_results.csv", sep = "_")) )
