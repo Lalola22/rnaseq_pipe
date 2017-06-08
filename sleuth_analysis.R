@@ -96,8 +96,8 @@ print("Wald test completed...", quote = FALSE)
 
 # flip the beta ----------------------------------------------------
 
-results_table <- sleuth_results(so, paste("condition", control, sep = "")) %>%
-    mutate(b = -1 * b)
+results_table <- sleuth_results(so, paste("condition", control, sep = ""))# %>%
+    #mutate(b = -1 * b)
 
 
 
