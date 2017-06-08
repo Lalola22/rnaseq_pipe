@@ -52,8 +52,17 @@ GRCh38trans=${extraPaths[1]}
 
 export PATH=${PWD}:$PATH
 
-# -- Adaptor trimming
+# -- Sleuth analysis for kallisto
 
-echo "Trimming adaptors..."
+echo "Sleuthing around kallisto..."
 
-python3 batch_trim.py "${outDir}/" "${rawDir}/" "${trimmomaticPath}/" $cores
+# make array with comparisons as each element
+
+((n_elements=${#samples[@]}, max_index=n_elements - 1))
+
+# i starts at one to avoid header row
+for ((i = 1; i <= max_index; i++)); do
+  echo "Running sleuth for: " "${samples[i]}"
+  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
+  "$cores" ${samples[i]}
+done
