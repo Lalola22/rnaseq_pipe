@@ -94,9 +94,16 @@ so <- sleuth_fit(so, ~1, "reduced")
 so <- sleuth_wt(so, paste("condition", control, sep = ""))
 print("Wald test completed...", quote = FALSE)
 
+# flip the beta ----------------------------------------------------
+
+results_table <- sleuth_results(so, paste("condition", control, sep = "")) %>%
+    mutate(b = -1 * b)
+
+
+
 # make and save results table ---------------------------------------------
 dir.create(outdir, recursive = TRUE) # will show a warning if this exists...
-results_table <- sleuth_results(so, paste("condition", control, sep = ""))
+
 write_csv(results_table, file.path(outdir, "sleuth_results.csv"))
 
 # Sleuth plots --------------------------------------------------------
