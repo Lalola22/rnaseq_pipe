@@ -33,7 +33,7 @@ replicates <- as.numeric(args[6])
 
 # Test values
 
-basedir <- "/home/slee/outputs/june_05/kallisto"
+basedir <- "/home/slee/outputs/bcl6_paper/kallisto"
 outdir <-  "/home/slee/outputs/test"
 cores <- 8
 treatment <- "25uM"
@@ -42,6 +42,7 @@ replicates <- 3
 
 # whether the results are for kallisto or sleuth data
 type <- basename(basedir)
+
 
 # sample table construction -----------------------------------------------
 
@@ -73,16 +74,29 @@ if (! dircheck == TRUE){
 
 ## Create the transcript_id to gene mappings
 
-
-txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-k <- keys(txdb, keytype = "GENEID")
-df <- select(txdb, keys = k, keytype = "gene_id", columns = "tx_name")
+txdb <- EnsDb.Hsapiens.v79
+k <- keys(txdb, keytype = "GENENAME")
+df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
 
+# make the file paths
+if (type == "kallisto"){
+    files <- file.path(sample_table$path, "abundance.h5")
+} else {
+    files <- file.path(sample_table$path, "quant.sf")
+}
 
 ## Import the quantification data
 
-txi <- tximport(files, type = type, tx2gene = tx2gene)
+txi <- tximport(
+    files,
+    type = type,
+    tx2gene = tx2gene,
+    txOut = TRUE)
+
+sampleTable <- data.frame(condition = factor(rep(c("25uM", "DMSO"), each = 3)))
+rownames(sampleTable) <- colnames(txi$counts)
+
 
 ddsTxi <- DESeqDataSetFromTximport(txi,
                                    colData = samples,
