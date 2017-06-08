@@ -33,7 +33,7 @@ replicates <- as.numeric(args[6])
 
 # Test values
 
-basedir <- "/home/slee/outputs/bcl6_paper/kallisto"
+basedir <- "/home/slee/outputs/bcl6_paper/salmon"
 outdir <-  "/home/slee/outputs/test"
 cores <- 8
 treatment <- "25uM"
@@ -42,6 +42,12 @@ replicates <- 3
 
 # whether the results are for kallisto or sleuth data
 type <- basename(basedir)
+
+if (treatment == "25uM"){
+  condt <- "FX1"
+} else {
+  condt <- treatment
+}
 
 
 # sample table construction -----------------------------------------------
@@ -58,7 +64,13 @@ sample_table <- sample_table %>%
   mutate(sample = paste(condition, sample, sep = "_")) %>%
   mutate(path = file.path(basedir, sample))
 
+sample_table$condition <- (as.factor(c(rep(condt, replicates),
+                                       rep(control, replicates))))
 
+sample_table$condition <- relevel(sample_table$condition,
+                                  paste(condt, replicates, sep = "_") )
+
+rownames(sample_table) <- sample_table$sample
 
 ## print to display as a check while program runs
 print("Sample table:", quote = FALSE)
@@ -82,8 +94,10 @@ tx2gene <- df[, 2:1]  # tx ID, then gene ID
 # make the file paths
 if (type == "kallisto"){
     files <- file.path(sample_table$path, "abundance.h5")
+    names(files) <- sample_table$sample
 } else {
     files <- file.path(sample_table$path, "quant.sf")
+    names(files) <- sample_table$sample
 }
 
 ## Import the quantification data
@@ -93,28 +107,30 @@ txi <- tximport(
     type = type,
     tx2gene = tx2gene,
     txOut = TRUE)
+# TXOut true means it stays at transcript level
 
-sampleTable <- data.frame(condition = factor(rep(c("25uM", "DMSO"), each = 3)))
-rownames(sampleTable) <- colnames(txi$counts)
-
+# [, "condition", drop = FALSE]
 
 ddsTxi <- DESeqDataSetFromTximport(txi,
-                                   colData = samples,
-                                   design = ~ condition)
+                                   colData = sample_table,
+                                   design = ~condition)
 
 
 # DESeq2 -------------------------------------------------------------------
 
 dds <- DESeq(ddsTxi)
 
-res <- results(dir)
+res <- results(dds)
 
+# order by padj
+
+resOrdered <- res[order(res$padj),]
 
 # ReportingTools -------------------------------------------------------------------
 
 des_report <- HTMLReport(shortName = "RNAseq_analysis_with_DESeq2",
     title = "RNA-seq analysis of differential expression using DESeq",
-    reportDirectory = outdir)
+    basePath = file.path(outdir, "report") )
 
 # check the countTable is right
 # check what annotations should be set to
@@ -122,7 +138,20 @@ publish(
     dds,
     des_report,
     pvalueCutoff = 0.05,
-    annotation.db = ".....",
-    factor = colData(dds)$conditions,
+    annotation.db = txdb,
+    factor = sample_table$condition,
     reportDir = outdir
     )
+
+
+# sample Plots -------------------------------------------------------------------
+
+pdf(file.path(outdir, "FX1_DMSO_MA_plot.pdf"), width = 7, height = 4)
+plotMA(res, ylim = c(-2,2))
+dev.off()
+
+pdf(file.path(outdir, "FX1_DMSO_top_padj_counts.pdf"), width = 7, height = 4)
+plotCounts(dds, gene=which.min(res$padj), intgroup="condition")
+dev.off()
+
+write_csv(as.data.frame(resOrdered), path = file.path(outdir, "FX1_DMSO_deseq2_results.csv"))
