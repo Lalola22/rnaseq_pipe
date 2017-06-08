@@ -1,12 +1,13 @@
 # Created 08/06/17
 # Sam Lee
 # For Deseq2 analysis of kallisto results
-# takes five inputs
+# takes six inputs
 # location of kallisto files
 # location of results to be saved
 # number of cores to use.
 # treatment condition
 # control condition
+# number of bioloigcal replicates in each condition
 
 # Setup -------------------------------------------------------------------
 
@@ -15,6 +16,7 @@ library(tximport)
 library(DESeq2)
 library(ensembldb)
 library(EnsDb.Hsapiens.v79)
+library(ReportingTools)
 
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument: if not, return an error
@@ -27,10 +29,16 @@ outdir <- args[2]
 cores <- args[3]
 treatment <- args[4]
 control <- args[5]
+replicates <- as.numeric(args[6])
 
 # Test values
 
 basedir <- "/home/slee/outputs/june_05/kallisto"
+outdir <-  "/home/slee/outputs/test"
+cores <- 8
+treatment <- "25uM"
+control <- "DMSO"
+replicates <- 3
 
 # whether the results are for kallisto or sleuth data
 type <- basename(basedir)
@@ -82,3 +90,25 @@ ddsTxi <- DESeqDataSetFromTximport(txi,
 
 
 # DESeq2 -------------------------------------------------------------------
+
+dds <- DESeq(ddsTxi)
+
+res <- results(dir)
+
+
+# ReportingTools -------------------------------------------------------------------
+
+des_report <- HTMLReport(shortName = "RNAseq_analysis_with_DESeq2",
+    title = "RNA-seq analysis of differential expression using DESeq",
+    reportDirectory = outdir)
+
+# check the countTable is right
+# check what annotations should be set to
+publish(
+    dds,
+    des_report,
+    pvalueCutoff = 0.05,
+    annotation.db = ".....",
+    factor = colData(dds)$conditions,
+    reportDir = outdir
+    )
