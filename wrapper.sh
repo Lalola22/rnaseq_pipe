@@ -37,13 +37,17 @@ fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
 
 # Read the two auxillary file into bash arrays
 
+cd aux_files
+
 oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
 oldIFS="$IFS"
-IFS=$'\n' samples=($(<"sleuth_samples.txt"))
+IFS=$'\n' samples=($(<"sample_table.txt"))
 IFS="$oldIFS"
+
+cd -
 
 # Set paths
 
@@ -90,7 +94,7 @@ fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 # "$GRCh38trans"
 
 # -- kallisto quant
-# 
+#
 # echo "Kallisto quantifications..."
 
 # python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
