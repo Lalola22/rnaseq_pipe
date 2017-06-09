@@ -60,7 +60,6 @@ export PATH=${PWD}:$PATH
 
 # -- Prep for DESeq2
 
-
 Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
 
 
