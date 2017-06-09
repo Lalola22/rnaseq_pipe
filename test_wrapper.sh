@@ -55,10 +55,24 @@ export PATH=${PWD}:$PATH
 
 # -- Prep for DESeq2
 
+
 Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
 
 
+# -- DESeq2 for salmon
 
+# make array with comparisons as each element
+
+((n_elements=${#samples[@]}, max_index=n_elements - 1))
+
+echo "DeSeq2 analysis of salmon quants happening..."
+
+echo "the quant dir is still hard-coded due to not running the full pipeline"
+
+for ((i = 1; i <= max_index; i++)); do
+  echo "Running deseq2 for: " "${samples[i]}"
+  Rscript dseq2_analysis.R "/home/slee/outputs/test/june_09" \
+  "salmon" "$cores" ${samples[i]}
 
 
 # # -- Sleuth analysis for kallisto

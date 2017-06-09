@@ -44,12 +44,12 @@ replicates <- as.numeric(args[6])
 
 # Test values
 
-top_dir <- "/home/slee/outputs/test/june_09"
-type <- "salmon"
-cores <- 8
-treatment <- "25uM"
-control <- "DMSO"
-replicates <- 3
+# top_dir <- "/home/slee/outputs/test/june_09"
+# type <- "salmon"
+# cores <- 8
+# treatment <- "25uM"
+# control <- "DMSO"
+# replicates <- 3
 
 # make the various directory paths
 
@@ -62,6 +62,9 @@ res_dir <- file.path(
 
 dir.create(res_dir, showWarnings = FALSE)
 
+#### REMOVE BEFORE USAGE -- TESTING ONLY
+
+quant_dir <- "/home/slee/outputs/bcl6_paper/salmon"
 
 if (type == "kallisto"){
     stop("Kallisto isn't working for scripting yet!!")
