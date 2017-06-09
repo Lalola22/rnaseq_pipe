@@ -28,7 +28,8 @@ fi
 
 if [ ! -d $outDir ]
 then
-    echo mkdir $outDir
+    mkdir "$outDir"
+    mkdir "$outDir/reference_files"
 fi
 
 # Initialise bash array with raw-read paths
