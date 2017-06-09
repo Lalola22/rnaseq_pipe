@@ -38,11 +38,11 @@ fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
 # Read the two auxillary file into bash arrays
 
 oldIFS="$IFS"
-IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
+IFS=$'\n' extraPaths=($(<"aux_files/extra_paths.txt"))
 IFS="$oldIFS"
 
 oldIFS="$IFS"
-IFS=$'\n' samples=($(<"sleuth_samples.txt"))
+IFS=$'\n' samples=($(<"aux_files/sample_table.txt"))
 IFS="$oldIFS"
 
 # Set paths
