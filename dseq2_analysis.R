@@ -9,11 +9,17 @@
 # control condition
 # number of bioloigcal replicates in each condition
 
+# 1. top level results directory
+# 2. quants to use (kallisto or salmon)
+# 3. number of cores
+# 4. treatment
+# 5. control
+# 6. replicates
 # Done in parallel for both transcript Level
 # and for collapsed gene level
 # at this point tx level only for salmon
 
-# Setup -------------------------------------------------------------------
+# Setup -----------------------------------------------
 
 library(tidyverse, quietly = TRUE)
 library(BiocParallel, quietly = TRUE)
@@ -24,7 +30,8 @@ library(EnsDb.Hsapiens.v79, quietly = TRUE)
 library(ReportingTools, quietly = TRUE)
 
 args <- commandArgs(trailingOnly = TRUE)
-# test if there is at least one argument: if not, return an error
+# test if there is at least one argument:
+# if not, return an error
 if (length(args) < 6) {
      stop("Six arguments must be supplied.", call. = FALSE)
 }
@@ -38,19 +45,26 @@ replicates <- as.numeric(args[6])
 
 # Test values
 
-basedir <- "/home/slee/outputs/bcl6_paper/salmon"
-outdir <-  "/home/slee/outputs/test/june_09"
-cores <- 6
+top_dir <- "/home/slee/outputs/test/june_09"
+type <- "salmon"
+cores <- 8
 treatment <- "25uM"
 control <- "DMSO"
 replicates <- 3
 
-# whether the results are for kallisto or sleuth data
-type <- basename(basedir)
+# make the various directories
+
+quant_dir <- file.path(top_dir, type)
+ref_dir <- file.path(top_dir, "reference_files")
+res_dir <- file.path(
+    top_dir,
+    "deseq2",
+    paste(treatment, control, sep = "_"))
+
 
 if (type == "kallisto"){
     stop("Kallisto isn't working for scripting yet!!")
-}s
+}
 
 # if 25uM is the treatment
 # we want to call it FX1
@@ -65,12 +79,13 @@ if (treatment == "25uM"){
 register(MulticoreParam(cores))
 
 
-# sample table construction -----------------------------------------------
+# sample table construction --------------------------
 
-sample_table <- as.data.frame(matrix("", nrow = replicates * 2, ncol = 3),
-                                     stringsAsFactors = FALSE)
-colnames(sample_table) <- c("sample", "condition","path")
+sample_table <- as.data.frame(
+    matrix("", nrow = replicates * 2, ncol = 3),
+    stringsAsFactors = FALSE)
 
+colnames(sample_table) <- c("sample", "condition", "path")
 
 sample_table <- sample_table %>%
     mutate(
@@ -79,7 +94,7 @@ sample_table <- sample_table %>%
                         c(1:replicates),
                         sep = "_")
         ) %>%
-    mutate(path = file.path(basedir, sample)) %>%
+    mutate(path = file.path(quant_dir, sample)) %>%
     mutate(condition = as.factor(
         c(rep(condt, replicates),
           rep(control, replicates)))) %>%
@@ -98,14 +113,11 @@ if (! dircheck == TRUE){
   stop("All the quantification directories for the conditions do not exist.")
 }
 
-# tximport -------------------------------------------------------------------
+# tximport ---------------------------------------------
 
-## Create the transcript_id to gene mappings
+## read in the tx2g table
 
-txdb <- EnsDb.Hsapiens.v79
-k <- keys(txdb, keytype = "GENENAME")
-df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
-tx2gene <- df[, 2:1]  # tx ID, then gene ID
+tx2gene <- read_csv(file.path(ref_dir, "tx2g_table.csv"))
 
 # make the quant file paths
 if (type == "kallisto"){
@@ -116,8 +128,10 @@ if (type == "kallisto"){
     names(files) <- sample_table$sample
 }
 
-## Import the quantification data
 
+
+
+## Import the quantification data
 
 txi <- tximport(
     files,
@@ -135,10 +149,10 @@ ddsTxi <- DESeqDataSetFromTximport(txi,
                                    design = ~condition)
 
 ddsTxi.gene <- DESeqDataSetFromTximport(txi.gene,
-                                  colData = sample_table,
-                                                  design = ~condition)
+                                    colData = sample_table,
+                                    design = ~condition)
 
-# DESeq2 -------------------------------------------------------------------
+# DESeq2 --------------------------------------------
 
 dds <- DESeq(ddsTxi, parallel = TRUE)
 dds.gene <- DESeq(ddsTxi.gene, parallel = TRUE)
@@ -159,9 +173,10 @@ res_ordered.gene
 
 # ReportingTools -------------------------------------------------------------------
 
-des_report <- HTMLReport(shortName = "RNAseq_analysis_with_DESeq2",
+des_report <- HTMLReport(
+    shortName = "RNAseq_analysis_with_DESeq2",
     title = "RNA-seq analysis of differential expression using DESeq",
-    basePath = file.path(outdir, "report") )
+    basePath = file.path(res_dir, "report") )
 
 # check the countTable is right
 # check what annotations should be set to
@@ -175,25 +190,29 @@ publish(
     )
 
 
-# sample Plots -------------------------------------------------------------------
+# sample Plots -------------------------------------------
 
-pdf(file.path(outdir, "FX1_DMSO_MA_plot.pdf"), width = 7, height = 4)
+pdf(file.path(
+    res_dir, "FX1_DMSO_MA_plot.pdf"),
+    width = 7, height = 4)
 plotMA(res, ylim = c(-2,2))
 dev.off()
 
-pdf(file.path(outdir, "FX1_DMSO_top_padj_counts.pdf"), width = 7, height = 4)
+pdf(file.path(
+    res_dir, "FX1_DMSO_top_padj_counts.pdf"),
+    width = 7, height = 4)
 plotCounts(dds, gene = which.min(res$padj), intgroup = "condition")
 dev.off()
 
 write.csv(
     as.data.frame(res_ordered),
     file = file.path(
-        outdir,
-        paste(condt, control, "gene_deseq2_results_02.csv", sep = "_")) )
+        res_dir,
+        "gene_deseq2_results_02.csv", sep = "_"))
 
-# save session info --------------------------------------------------------
+# save session info --------------------------------------
 
 
-sink(file.path()"sessionInfo.txt")
+sink(file =file.path(res_dir, "dseq2_sessionInfo.txt") )
 sessionInfo()
 sink()
