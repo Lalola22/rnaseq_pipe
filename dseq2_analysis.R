@@ -177,19 +177,19 @@ res_ordered.gene
 
 # ReportingTools -------------------------------------------------------------------
 
-des_report <- HTMLReport(
-    shortName = "RNAseq_analysis_with_DESeq2",
-    title = paste("Gene Level RNA-seq analysis", condt, control, sep = "_"),
-    basePath = file.path(res_dir, "report") )
-publish(
-    dds.gene,
-    des_report,
-    pvalueCutoff = 0.05,
-    annotation.db = "org.Hs.eg.db",
-    factor = sample_table$condition,
-    reportDir = outdir
-    )
-finish(des_report)
+# des_report <- HTMLReport(
+#     shortName = "RNAseq_analysis_with_DESeq2",
+#     title = paste("Gene Level RNA-seq analysis", condt, control, sep = "_"),
+#     basePath = file.path(res_dir, "report") )
+# publish(
+#     dds.gene,
+#     des_report,
+#     pvalueCutoff = 0.05,
+#     annotation.db = "org.Hs.eg.db",
+#     factor = sample_table$condition,
+#     reportDir = outdir
+#     )
+# finish(des_report)
 
 # sample Plots -------------------------------------------
 
