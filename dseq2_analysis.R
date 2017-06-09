@@ -179,7 +179,7 @@ res_ordered.gene
 
 des_report <- HTMLReport(
     shortName = "RNAseq_analysis_with_DESeq2",
-    title = paste("Gene Level RNA-seq analysis", condt, control sep = "_"),
+    title = paste("Gene Level RNA-seq analysis", condt, control, sep = "_"),
     basePath = file.path(res_dir, "report") )
 publish(
     dds.gene,
