@@ -60,10 +60,14 @@ res_dir <- file.path(
     "deseq2",
     paste(treatment, control, sep = "_"))
 
-dir.create(res_dir, showWarnings = FALSE)
+dir.create(
+    res_dir,
+    showWarnings = FALSE,
+    recursive = TRUE
+    )
 
 #### REMOVE BEFORE USAGE -- TESTING ONLY
-# 
+#
 # quant_dir <- "/home/slee/outputs/bcl6_paper/salmon"
 
 if (type == "kallisto"){
@@ -194,7 +198,8 @@ res_ordered.gene
 # sample Plots -------------------------------------------
 
 pdf(file.path(
-    res_dir, "FX1_DMSO_MA_plot.pdf"),
+    res_dir,
+    paste(condt, control, "MA_plot.pdf", sep = "_") ),
     width = 7, height = 4)
 plotMA(res, ylim = c(-2,2))
 dev.off()
