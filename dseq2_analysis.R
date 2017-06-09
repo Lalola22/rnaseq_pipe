@@ -26,6 +26,7 @@ library(BiocParallel, quietly = TRUE)
 library(tximport, quietly = TRUE)
 library(DESeq2, quietly = TRUE)
 library(ReportingTools, quietly = TRUE)
+library(org.Hs.eg.db, quietly = TRUE)
 
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument:
@@ -34,9 +35,9 @@ if (length(args) < 6) {
      stop("Six arguments must be supplied.", call. = FALSE)
 }
 
-basedir <- args[1]
-outdir <- args[2]
-cores <- args[3]
+top_dir <- args[1]
+type <- args[2]
+cores <- as.numeric(args[3])
 treatment <- args[4]
 control <- args[5]
 replicates <- as.numeric(args[6])
@@ -50,7 +51,7 @@ treatment <- "25uM"
 control <- "DMSO"
 replicates <- 3
 
-# make the various directories
+# make the various directory paths
 
 quant_dir <- file.path(top_dir, type)
 ref_dir <- file.path(top_dir, "reference_files")
@@ -58,6 +59,8 @@ res_dir <- file.path(
     top_dir,
     "deseq2",
     paste(treatment, control, sep = "_"))
+
+dir.create(res_dir, showWarnings = FALSE)
 
 
 if (type == "kallisto"){
@@ -173,20 +176,17 @@ res_ordered.gene
 
 des_report <- HTMLReport(
     shortName = "RNAseq_analysis_with_DESeq2",
-    title = "RNA-seq analysis of differential expression using DESeq",
+    title = paste("Gene Level RNA-seq analysis", condt, control sep = "_"),
     basePath = file.path(res_dir, "report") )
-
-# check the countTable is right
-# check what annotations should be set to
 publish(
-    dds,
+    dds.gene,
     des_report,
     pvalueCutoff = 0.05,
-    annotation.db = txdb,
+    annotation.db = "org.Hs.eg.db",
     factor = sample_table$condition,
     reportDir = outdir
     )
-
+finish(des_report)
 
 # sample Plots -------------------------------------------
 
@@ -196,17 +196,20 @@ pdf(file.path(
 plotMA(res, ylim = c(-2,2))
 dev.off()
 
-pdf(file.path(
-    res_dir, "FX1_DMSO_top_padj_counts.pdf"),
-    width = 7, height = 4)
-plotCounts(dds, gene = which.min(res$padj), intgroup = "condition")
-dev.off()
-
 write.csv(
     as.data.frame(res_ordered),
     file = file.path(
         res_dir,
-        "gene_deseq2_results_02.csv", sep = "_"))
+        "tx_deseq2_results.csv")
+        )
+
+write.csv(
+    as.data.frame(res_ordered.gene),
+    file = file.path(
+        res_dir,
+        "tx_deseq2_results.csv")
+        )
+
 
 # save session info --------------------------------------
 
