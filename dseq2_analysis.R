@@ -2,12 +2,16 @@
 # Sam Lee
 # For Deseq2 analysis of kallisto results
 # takes six inputs
-# location of kallisto files
+# location of quant files
 # location of results to be saved
 # number of cores to use.
 # treatment condition
 # control condition
 # number of bioloigcal replicates in each condition
+
+# Done in parallel for both transcript Level
+# and for collapsed gene level
+# at this point tx level only for salmon
 
 # Setup -------------------------------------------------------------------
 
@@ -36,7 +40,7 @@ replicates <- as.numeric(args[6])
 
 basedir <- "/home/slee/outputs/bcl6_paper/salmon"
 outdir <-  "/home/slee/outputs/test/june_09"
-cores <- 8
+cores <- 6
 treatment <- "25uM"
 control <- "DMSO"
 replicates <- 3
@@ -44,6 +48,9 @@ replicates <- 3
 # whether the results are for kallisto or sleuth data
 type <- basename(basedir)
 
+if (type == "kallisto"){
+    stop("Kallisto isn't working for scripting yet!!")
+}s
 
 # if 25uM is the treatment
 # we want to call it FX1
@@ -62,7 +69,7 @@ register(MulticoreParam(cores))
 
 sample_table <- as.data.frame(matrix("", nrow = replicates * 2, ncol = 3),
                                      stringsAsFactors = FALSE)
-colnames(sample_table) <- c("sample", "condition", "path")
+colnames(sample_table) <- c("sample", "condition","path")
 
 
 sample_table <- sample_table %>%
@@ -76,7 +83,7 @@ sample_table <- sample_table %>%
     mutate(condition = as.factor(
         c(rep(condt, replicates),
           rep(control, replicates)))) %>%
-    mutate(condition = relevel(condition, condt))
+    mutate(condition = relevel(condition, control))
 
 ## check if this is needed...
 # rownames(sample_table) <- sample_table$sample
@@ -111,29 +118,44 @@ if (type == "kallisto"){
 
 ## Import the quantification data
 
+
 txi <- tximport(
     files,
     type = type,
     tx2gene = tx2gene,
     txOut = TRUE)
 # TXOut true means it stays at transcript level
-
-# [, "condition", drop = FALSE]
+txi.gene <- tximport(
+    files,
+    type = type,
+    tx2gene = tx2gene)
 
 ddsTxi <- DESeqDataSetFromTximport(txi,
                                    colData = sample_table,
                                    design = ~condition)
 
+ddsTxi.gene <- DESeqDataSetFromTximport(txi.gene,
+                                  colData = sample_table,
+                                                  design = ~condition)
 
 # DESeq2 -------------------------------------------------------------------
 
 dds <- DESeq(ddsTxi, parallel = TRUE)
+dds.gene <- DESeq(ddsTxi.gene, parallel = TRUE)
 
 res <- results(dds)
+res.gene <- results(dds.gene)
 
 # order by padj
 
 res_ordered <- res[order(res$padj),]
+res_ordered.gene <- res.gene[order(res.gene$padj),]
+
+print("Transcript Level Results", quote = FALSE)
+res_ordered
+
+print("Gene Level Results", quote = FALSE)
+res_ordered.gene
 
 # ReportingTools -------------------------------------------------------------------
 
@@ -167,4 +189,11 @@ write.csv(
     as.data.frame(res_ordered),
     file = file.path(
         outdir,
-        paste(condt, control, "tx_deseq2_results.csv", sep = "_")) )
+        paste(condt, control, "gene_deseq2_results_02.csv", sep = "_")) )
+
+# save session info --------------------------------------------------------
+
+
+sink(file.path()"sessionInfo.txt")
+sessionInfo()
+sink()
