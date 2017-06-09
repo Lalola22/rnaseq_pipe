@@ -5,10 +5,10 @@
 
 # Setup -------------------------------------------------------------------
 
-library(tidyverse, quietly = TRUE)
-library(BiocParallel, quietly = TRUE)
-library(ensembldb, quietly = TRUE)
-library(EnsDb.Hsapiens.v79, quietly = TRUE)
+library(tidyverse, quietly = TRUE, verbose = FALSE)
+library(BiocParallel, quietly = TRUE, verbose = FALSE)
+library(ensembldb, quietly = TRUE, verbose = FALSE)
+library(EnsDb.Hsapiens.v79, quietly = TRUE, verbose = FALSE)
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -19,10 +19,13 @@ register(MulticoreParam(cores))
 
 # Code body -------------------------------------------------------------------
 
+print("Forming gene to transcript mapping...", quote = FALSE)
+
 txdb <- EnsDb.Hsapiens.v79
 k <- keys(txdb, keytype = "GENENAME")
 df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
 
+print("Saving the gene to transcript mapping...", quote = FALSE)
 
 write_csv(tx2gene, path = file.path(outdir, "tx2g_table.csv"))
