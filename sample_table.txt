@@ -1,0 +1,3 @@
+Treatment   Control Replicates
+25uM    DMSO    3
+Dox Untreated   3
