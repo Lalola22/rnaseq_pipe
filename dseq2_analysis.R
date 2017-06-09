@@ -25,8 +25,6 @@ library(tidyverse, quietly = TRUE)
 library(BiocParallel, quietly = TRUE)
 library(tximport, quietly = TRUE)
 library(DESeq2, quietly = TRUE)
-library(ensembldb, quietly = TRUE)
-library(EnsDb.Hsapiens.v79, quietly = TRUE)
 library(ReportingTools, quietly = TRUE)
 
 args <- commandArgs(trailingOnly = TRUE)
