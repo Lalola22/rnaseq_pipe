@@ -5,10 +5,11 @@
 
 # Setup -------------------------------------------------------------------
 
-library(tidyverse, quietly = TRUE, verbose = FALSE)
-library(BiocParallel, quietly = TRUE, verbose = FALSE)
-library(ensembldb, quietly = TRUE, verbose = FALSE)
-library(EnsDb.Hsapiens.v79, quietly = TRUE, verbose = FALSE)
+library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+library(BiocParallel, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+library(EnsDb.Hsapiens.v79, quietly = TRUE,
+    verbose = FALSE, warn.conflicts = FALSE)
 
 args <- commandArgs(trailingOnly = TRUE)
 
