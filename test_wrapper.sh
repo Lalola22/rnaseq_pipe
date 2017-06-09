@@ -52,17 +52,26 @@ GRCh38trans=${extraPaths[1]}
 
 export PATH=${PWD}:$PATH
 
-# -- Sleuth analysis for kallisto
 
-echo "Sleuthing around kallisto..."
+# -- Prep for DESeq2
 
-# make array with comparisons as each element
+Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
 
-((n_elements=${#samples[@]}, max_index=n_elements - 1))
 
-# i starts at one to avoid header row
-for ((i = 1; i <= max_index; i++)); do
-  echo "Running sleuth for: " "${samples[i]}"
-  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
-  "$cores" ${samples[i]}
-done
+
+
+
+# # -- Sleuth analysis for kallisto
+#
+# echo "Sleuthing around kallisto..."
+#
+# # make array with comparisons as each element
+#
+# ((n_elements=${#samples[@]}, max_index=n_elements - 1))
+#
+# # i starts at one to avoid header row
+# for ((i = 1; i <= max_index; i++)); do
+#   echo "Running sleuth for: " "${samples[i]}"
+#   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
+#   "$cores" ${samples[i]}
+# done
