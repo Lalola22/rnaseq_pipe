@@ -76,7 +76,7 @@ echo "the quant dir is still hard-coded due to not running the full pipeline"
 
 for ((i = 1; i <= max_index; i++)); do
   echo "Running deseq2 for: " "${samples[i]}"
-  echo Rscript dseq2_analysis.R "/home/slee/outputs/test/june_09" \
+  Rscript dseq2_analysis.R "/home/slee/outputs/test/june_09" \
   "salmon" "$cores" ${samples[i]};
  done
 
