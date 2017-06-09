@@ -207,7 +207,7 @@ write.csv(
     as.data.frame(res_ordered.gene),
     file = file.path(
         res_dir,
-        "tx_deseq2_results.csv")
+        "gene_deseq2_results.csv")
         )
 
 
