@@ -63,8 +63,8 @@ res_dir <- file.path(
 dir.create(res_dir, showWarnings = FALSE)
 
 #### REMOVE BEFORE USAGE -- TESTING ONLY
-
-quant_dir <- "/home/slee/outputs/bcl6_paper/salmon"
+# 
+# quant_dir <- "/home/slee/outputs/bcl6_paper/salmon"
 
 if (type == "kallisto"){
     stop("Kallisto isn't working for scripting yet!!")
