@@ -15,9 +15,14 @@ args <- commandArgs(trailingOnly = TRUE)
 outdir <- args[1]
 cores <- args[2]
 
+register(MulticoreParam(cores))
+
 # Code body -------------------------------------------------------------------
 
 txdb <- EnsDb.Hsapiens.v79
 k <- keys(txdb, keytype = "GENENAME")
 df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
+
+
+write_csv(tx2gene, path = file.path(outdir, "tx2g_table.csv"))
