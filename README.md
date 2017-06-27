@@ -29,9 +29,9 @@ This file should contain the following paths with trailing `/`
 * path to the reference transcriptome
     *  A reference transcriptome can be downloaded from the UCSC genome browser
 
-### sleuth_samples.txt
+### sample_table.txt
 
-This is a TSV file that contains the different comparisons that should be made within sleuth for both of the Salmon and kallisto data. Column one is the treatment and column two the control. It should look something like this. Each row of the file will result in a new set of calls to sleuth for the Salmon and kallisto results to be made.
+This is a TSV file that contains the different comparisons that should be made within DESeq2 for the Salmon data. Column one is the treatment and column two the control. It should look something like this. Each row of the file will result in a new set of calls to DESeq2 for the Salmon results to be made.
 
 ```
 Treatment   Control Replicates
@@ -47,7 +47,7 @@ Dox Untreated   3
 * Trimmed `.fastq.gz` files for each pair of raw-reads.
 * Kallisto quantifications for each sample
 * Salmon quantifications for each sample
-* Sleuth outputs for both quantifiation strategies. A number of plots are generated as well as the results file in `.csv` for further downstream visualisations
+* DESeq2 outputs, a number of plots are generated as well as the results file in `.csv` for further downstream visualisations
 
 
 ## Dependencies
@@ -56,16 +56,16 @@ If you can run all these programs you should be good to go..
 
 * FastQC
 * Trimmomatic
-* kallisto
 * salmon
 
 The following R packages will be needed
 
 * biomaRt
 * tidyverse
-* sleuth
+* tximport
+* DESeq2
 * stringR
 
 Python 3.XX is required with the following non-standard packages
 
-* joblib 
+* joblib
