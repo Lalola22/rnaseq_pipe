@@ -28,7 +28,7 @@ fi
 
 if [ ! -d $outDir ]
 then
-    echo mkdir $outDir
+    mkdir $outDir
 fi
 
 # Initialise bash array with raw-read paths
@@ -37,13 +37,17 @@ fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
 
 # Read the two auxillary file into bash arrays
 
+cd aux_files
+
 oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
 oldIFS="$IFS"
-IFS=$'\n' samples=($(<"sleuth_samples.txt"))
+IFS=$'\n' samples=($(<"sample_table.txt"))
 IFS="$oldIFS"
+
+cd -
 
 # Set paths
 
@@ -82,18 +86,18 @@ fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # -- kallisto index
 
-echo "Creating the kallisto index..."
-
-mkdir -p "${outDir}/reference_files"
-
-kallisto index -i "${outDir}/reference_files/GRCh38transcriptome_kal.idx" \
-"$GRCh38trans"
+# echo "Creating the kallisto index..."
+#
+# mkdir -p "${outDir}/reference_files"
+#
+# kallisto index -i "${outDir}/reference_files/GRCh38transcriptome_kal.idx" \
+# "$GRCh38trans"
 
 # -- kallisto quant
+#
+# echo "Kallisto quantifications..."
 
-echo "Kallisto quantifications..."
-
-python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+# python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # -- Salmon index
 
@@ -108,36 +112,56 @@ echo "Salmon quantifications..."
 
 python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
-# -- Salmon prep with Wasabi
+# # -- Salmon prep with Wasabi
+#
+# echo "Wasabi-ing that Salmon"
+#
+# Rscript wasabi.R "${outDir}/salmon"
+#
+# # -- Sleuth analysis for kallisto
+#
+# echo "Sleuthing around kallisto..."
+#
+# # make array with comparisons as each element
+#
+# ((n_elements=${#samples[@]}, max_index=n_elements - 1))
+#
+# # i starts at one to avoid header row
+# for ((i = 1; i <= max_index; i++)); do
+#   echo "Running sleuth for: " "${samples[i]}"
+#   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
+#   "$cores" ${samples[i]}
+# done
+#
+# # -- Sleuth analysis for Salmon
+#
+# echo "Sleuthing around Salmon..."
+#
+# for ((i = 1; i <= max_index; i++)); do
+#   echo "Running sleuth for: " "${samples[i]}"
+#   Rscript sleuth_analysis.R "${outDir}/salmon" "${outDir}/sleuth_salmon" \
+#   "$cores" ${samples[i]}
+# done
 
-echo "Wasabi-ing that Salmon"
+# -- Prep for DESeq2
 
-Rscript wasabi.R "${outDir}/salmon"
+Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
 
-# -- Sleuth analysis for kallisto
 
-echo "Sleuthing around kallisto..."
+# -- DESeq2 for salmon
 
 # make array with comparisons as each element
 
 ((n_elements=${#samples[@]}, max_index=n_elements - 1))
 
-# i starts at one to avoid header row
-for ((i = 1; i <= max_index; i++)); do
-  echo "Running sleuth for: " "${samples[i]}"
-  Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
-  "$cores" ${samples[i]}
-done
+echo "DeSeq2 analysis of salmon quants happening..."
 
-# -- Sleuth analysis for Salmon
-
-echo "Sleuthing around Salmon..."
 
 for ((i = 1; i <= max_index; i++)); do
-  echo "Running sleuth for: " "${samples[i]}"
-  Rscript sleuth_analysis.R "${outDir}/salmon" "${outDir}/sleuth_salmon" \
-  "$cores" ${samples[i]}
-done
+  echo "Running deseq2 for: " "${samples[i]}"
+  Rscript dseq2_analysis.R "/$outDir" \
+  "salmon" "$cores" ${samples[i]};
+ done
 
 
 echo "Finished at" $(date)
