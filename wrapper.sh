@@ -84,21 +84,6 @@ mkdir -p "${outDir}/fastqc/trimmed"
 
 fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
-# -- kallisto index
-
-# echo "Creating the kallisto index..."
-#
-# mkdir -p "${outDir}/reference_files"
-#
-# kallisto index -i "${outDir}/reference_files/GRCh38transcriptome_kal.idx" \
-# "$GRCh38trans"
-
-# -- kallisto quant
-#
-# echo "Kallisto quantifications..."
-
-# python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-
 # -- Salmon index
 
 echo "Creating the Salmon index..."
@@ -111,37 +96,6 @@ salmon index -t "$GRCh38trans" -i \
 echo "Salmon quantifications..."
 
 python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
-
-# # -- Salmon prep with Wasabi
-#
-# echo "Wasabi-ing that Salmon"
-#
-# Rscript wasabi.R "${outDir}/salmon"
-#
-# # -- Sleuth analysis for kallisto
-#
-# echo "Sleuthing around kallisto..."
-#
-# # make array with comparisons as each element
-#
-# ((n_elements=${#samples[@]}, max_index=n_elements - 1))
-#
-# # i starts at one to avoid header row
-# for ((i = 1; i <= max_index; i++)); do
-#   echo "Running sleuth for: " "${samples[i]}"
-#   Rscript sleuth_analysis.R "${outDir}/kallisto" "${outDir}/sleuth_kallisto" \
-#   "$cores" ${samples[i]}
-# done
-#
-# # -- Sleuth analysis for Salmon
-#
-# echo "Sleuthing around Salmon..."
-#
-# for ((i = 1; i <= max_index; i++)); do
-#   echo "Running sleuth for: " "${samples[i]}"
-#   Rscript sleuth_analysis.R "${outDir}/salmon" "${outDir}/sleuth_salmon" \
-#   "$cores" ${samples[i]}
-# done
 
 # -- Prep for DESeq2
 
