@@ -28,7 +28,7 @@ fi
 
 if [ ! -d $outDir ]
 then
-    mkdir $outDir
+    mkdir -p $outDir
 fi
 
 # Initialise bash array with raw-read paths
