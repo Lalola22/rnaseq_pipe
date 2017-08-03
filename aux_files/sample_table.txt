@@ -1,2 +1,4 @@
 Treatment   Control Replicates
-RT Untreated   3
+25uM    Untreated   3
+25uM    DMSO    3
+DMSO    Untreated   3

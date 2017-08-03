@@ -10,13 +10,11 @@
 # number of bioloigcal replicates in each condition
 
 # 1. top level results directory
-# 2. quants to use (kallisto or salmon)
+# 2. paths to the sample table
 # 3. number of cores
-# 4. treatment
-# 5. control
-# 6. replicates
+#
 # Done in parallel for both transcript Level
-# and for collapsed gene level
+# and for collapsed gene level woth tximport
 # at this point tx level only for salmon
 
 # Setup -----------------------------------------------
@@ -25,8 +23,7 @@ library(tidyverse, quietly = TRUE)
 library(BiocParallel, quietly = TRUE)
 library(tximport, quietly = TRUE)
 library(DESeq2, quietly = TRUE)
-library(ReportingTools, quietly = TRUE)
-library(org.Hs.eg.db, quietly = TRUE)
+
 
 args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument:
@@ -51,6 +48,15 @@ replicates <- as.numeric(args[6])
 # control <- "DMSO"
 # replicates <- 3
 
+# Fucntions ---
+
+tx_gene_conv <- function(tx, tx2g){ # requires tx2g be loaded
+  # takes a vec of TX_IDS and returns a vec of HGNC_IDS
+  vec <-  match(tx, tx2g$TXID)
+  gene <- tx2g[vec, 2]
+  return(gene)
+}
+
 # make the various directory paths
 
 quant_dir <- file.path(top_dir, type)
@@ -74,13 +80,7 @@ if (type == "kallisto"){
     stop("Kallisto isn't working for scripting yet!!")
 }
 
-# if 25uM is the treatment
-# we want to call it FX1
-if (treatment == "25uM"){
-  condt <- "FX1"
-} else {
-  condt <- treatment
-}
+
 
 # Set number of cores for multi-processing
 
@@ -89,9 +89,7 @@ register(MulticoreParam(cores))
 
 # sample table construction --------------------------
 
-sample_table <- as.data.frame(
-    matrix("", nrow = replicates * 2, ncol = 3),
-    stringsAsFactors = FALSE)
+sample_table <- read
 
 colnames(sample_table) <- c("sample", "condition", "path")
 
