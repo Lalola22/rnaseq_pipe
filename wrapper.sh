@@ -43,9 +43,9 @@ oldIFS="$IFS"
 IFS=$'\n' extraPaths=($(<"extra_paths.txt"))
 IFS="$oldIFS"
 
-oldIFS="$IFS"
-IFS=$'\n' samples=($(<"sample_table.txt"))
-IFS="$oldIFS"
+# oldIFS="$IFS"
+# IFS=$'\n' samples=($(<"sample_table.txt"))
+# IFS="$oldIFS"
 
 cd -
 
