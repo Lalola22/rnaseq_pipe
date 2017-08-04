@@ -1,0 +1,93 @@
+mkdir /home/slee/outputs/bcl6_paper
+Inital read QC...
+Analysis complete for Dox_1_R2.fastq.gz
+Analysis complete for Dox_1_R1.fastq.gz
+Analysis complete for Dox_3_R2.fastq.gz
+Analysis complete for Untreated_3_R1.fastq.gz
+Analysis complete for Untreated_1_R2.fastq.gz
+Analysis complete for Dox_3_R1.fastq.gz
+Analysis complete for Untreated_3_R2.fastq.gz
+Analysis complete for Dox_2_R1.fastq.gz
+Analysis complete for 25uM_2_R1.fastq.gz
+Analysis complete for Dox_2_R2.fastq.gz
+Analysis complete for 25uM_2_R2.fastq.gz
+Analysis complete for 25uM_1_R1.fastq.gz
+Analysis complete for Untreated_1_R1.fastq.gz
+Analysis complete for 25uM_3_R1.fastq.gz
+Analysis complete for 25uM_3_R2.fastq.gz
+Analysis complete for 25uM_1_R2.fastq.gz
+Analysis complete for Untreated_2_R2.fastq.gz
+Analysis complete for Untreated_2_R1.fastq.gz
+Analysis complete for DMSO_3_R2.fastq.gz
+Analysis complete for DMSO_3_R1.fastq.gz
+Analysis complete for DMSO_2_R2.fastq.gz
+Analysis complete for DMSO_2_R1.fastq.gz
+Analysis complete for DMSO_1_R1.fastq.gz
+Analysis complete for DMSO_1_R2.fastq.gz
+Trimming adaptors...
+Post-trimming read QC
+Analysis complete for Dox_2_1P.fastq.gz
+Analysis complete for Dox_1_1P.fastq.gz
+Analysis complete for Dox_3_1P.fastq.gz
+Analysis complete for DMSO_2_2P.fastq.gz
+Analysis complete for DMSO_1_2P.fastq.gz
+Analysis complete for 25uM_3_2P.fastq.gz
+Analysis complete for 25uM_3_1P.fastq.gz
+Analysis complete for DMSO_3_2P.fastq.gz
+Analysis complete for Untreated_3_1P.fastq.gz
+Analysis complete for 25uM_1_1P.fastq.gz
+Analysis complete for DMSO_1_1P.fastq.gz
+Analysis complete for DMSO_2_1P.fastq.gz
+Analysis complete for Dox_1_2P.fastq.gz
+Analysis complete for Untreated_1_1P.fastq.gz
+Analysis complete for Untreated_1_2P.fastq.gz
+Analysis complete for Dox_3_2P.fastq.gz
+Analysis complete for Untreated_2_2P.fastq.gz
+Analysis complete for Untreated_2_1P.fastq.gz
+Analysis complete for Untreated_3_2P.fastq.gz
+Analysis complete for 25uM_2_2P.fastq.gz
+Analysis complete for 25uM_2_1P.fastq.gz
+Analysis complete for Dox_2_2P.fastq.gz
+Analysis complete for DMSO_3_1P.fastq.gz
+Analysis complete for 25uM_1_2P.fastq.gz
+Creating the kallisto index...
+Kallisto quantifications...
+Creating the Salmon index...
+Salmon quantifications...
+Wasabi-ing that Salmon
+Mon Jun  5 19:54:14 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/25uM_1 to kallisto HDF5 format"
+Mon Jun  5 19:54:21 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/25uM_2 to kallisto HDF5 format"
+Mon Jun  5 19:54:29 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/25uM_3 to kallisto HDF5 format"
+Mon Jun  5 19:54:36 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/DMSO_1 to kallisto HDF5 format"
+Mon Jun  5 19:54:44 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/DMSO_2 to kallisto HDF5 format"
+Mon Jun  5 19:54:51 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/DMSO_3 to kallisto HDF5 format"
+Mon Jun  5 19:54:58 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Dox_1 to kallisto HDF5 format"
+Mon Jun  5 19:55:06 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Dox_2 to kallisto HDF5 format"
+Mon Jun  5 19:55:14 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Dox_3 to kallisto HDF5 format"
+Mon Jun  5 19:55:23 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Untreated_1 to kallisto HDF5 format"
+Mon Jun  5 19:55:30 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Untreated_2 to kallisto HDF5 format"
+Mon Jun  5 19:55:37 2017
+[1] "Successfully converted sailfish / salmon results in /home/slee/outputs/bcl6_paper/salmon/Untreated_3 to kallisto HDF5 format"
+[1] TRUE
+Sleuthing around kallisto...
+Running sleuth for:  25uM    DMSO    3
+[1] Sample table:
+  sample condition                                          path
+1 25uM_1      25uM /home/slee/outputs/bcl6_paper/kallisto/25uM_1
+2 25uM_2      25uM /home/slee/outputs/bcl6_paper/kallisto/25uM_2
+3 25uM_3      25uM /home/slee/outputs/bcl6_paper/kallisto/25uM_3
+4 DMSO_1      DMSO /home/slee/outputs/bcl6_paper/kallisto/DMSO_1
+5 DMSO_2      DMSO /home/slee/outputs/bcl6_paper/kallisto/DMSO_2
+6 DMSO_3      DMSO /home/slee/outputs/bcl6_paper/kallisto/DMSO_3
+[1] Wald test completed...

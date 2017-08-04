@@ -1,0 +1,4 @@
+condition, replicates
+Untreated, 3
+DMSO, 3
+25uM, 3
