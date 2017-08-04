@@ -106,16 +106,19 @@ Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
 
 # make array with comparisons as each element
 
-((n_elements=${#samples[@]}, max_index=n_elements - 1))
+# ((n_elements=${#samples[@]}, max_index=n_elements - 1))
 
-echo "DeSeq2 analysis of salmon quants happening..."
+echo "DESeq2 analysis for differential expression at the \
+gene and transcript level"
+
+Rscript deseq2_analysis.R "$outDir" "aux_files" "$cores"
 
 
-for ((i = 1; i <= max_index; i++)); do
-  echo "Running deseq2 for: " "${samples[i]}"
-  Rscript dseq2_analysis.R "/$outDir" \
-  "salmon" "$cores" ${samples[i]};
- done
+# for ((i = 1; i <= max_index; i++)); do
+#   echo "Running deseq2 for: " "${samples[i]}"
+#   Rscript dseq2_analysis.R "/$outDir" \
+#   "salmon" "$cores" ${samples[i]};
+#  done
 
 
 echo "Finished at" $(date)
