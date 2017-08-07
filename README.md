@@ -15,11 +15,35 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 * The second arguement is the location you want results to be saved to. If the directory does not exist it will be created
 * The third arguement is the number of threads to allocate to this pipeline. The more the better: vroom vroom
 
-An example call that also uses piping to `tee` to save a log of commands run is:
+One approach to keeping the scripts used to create results associated with them will be to create a fresh clone of this repository prior to running the pipeline and saving the results within it e.g.
 
-`./wrapper.sh "/home/slee/data/bcl6_raw" "/home/slee/outputs/bcl6_paper" "18" | tee 2017-06-10-log.txt`
+```bash
+# clone the git repo and give a descriptive name
+git clone https://github.com/samleenz/rnaseq_pipe.git
+mv rnaseq_pipe YYYY-MM-DD-rnaseq_pipe
+cd YYYY-MM-DD-rnaseq_pipe
+
+# STOP: edit the aux files to match your experimental design
+
+# check all dependencies
+
+./checks/check-packages.R
+
+./checks/check-programs.sh
+
+# fix issues and re-run above to resolve dependencies
+
+datDir="/home/slee/data/bcl6_raw"
+outDir="outputs"
+cores="18"
+
+./run_analysis.sh $datDir $outDir $cores | tee log.txt
+```
+
 
 ## Required meta-data
+
+All meta-data files have example content within.
 
 ### `extra_paths.txt`
 
