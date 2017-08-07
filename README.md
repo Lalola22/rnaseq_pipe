@@ -2,6 +2,12 @@
 
 A basic pipeline for analysis of RNA-seq data. This provides a framework for reference guided quantification and differential expression testing including both quality control steps on read files and trimming of adapters / low quality reads.
 
+* `FastQC` for fastq file quality checking
+* `trimmomatic` for fastq read trimming
+* `salmon` for pseudo-alignment and quantifications
+* `tximport` to prep quantifications for DE testing
+* `DESeq2` for testing of differential expression
+
  This pipeline has only been tested on RNA-seq data generated on the Illumina HiSeq platform.
 
 **Note:** All programs used need to be added to `$PATH`
