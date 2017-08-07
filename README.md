@@ -1,5 +1,7 @@
 # Analysis of RNA-seq data
 
+Written by Samuel Lee: samleenz@me.com
+
 A basic pipeline for analysis of RNA-seq data. This provides a framework for reference guided quantification and differential expression testing including both quality control steps on read files and trimming of adapters / low quality reads.
 
 * `FastQC` for fastq file quality checking
@@ -17,7 +19,7 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 `./wrapper.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
 
 * The first argument points to a directory containing condition-named directories with the paired end sequencing reads
-    * e.g. `data/` may contain `{foo/,bar/}` and then `data/foo/` has `foo_1_R1.fastq.gz  2foo_1_R2.fastq.gz  foo_2_R1.fastq.gz  foo_2_R2.fastq.gz  foo_3_R1.fastq.gz  foo_3_R2.fastq.gz`
+    * e.g. `data/` may contain `{foo/,bar/}` and then `data/foo/` has `foo_1_R1.fastq.gz  foo_1_R2.fastq.gz  foo_2_R1.fastq.gz  foo_2_R2.fastq.gz  foo_3_R1.fastq.gz  foo_3_R2.fastq.gz`
 * The second arguement is the location you want results to be saved to. If the directory does not exist it will be created
 * The third arguement is the number of threads to allocate to this pipeline. The more the better: vroom vroom
 
@@ -76,11 +78,12 @@ This is a csv table that lists each of the log2 fold change tests to be run by D
 
 * FastQC Reports for before and after read trimming
 * Trimmed `.fastq.gz` files for each pair of raw-reads.
-* Kallisto quantifications for each sample
+    * Forward / reverse paired and forward / reverse unpaired
 * Salmon quantifications for each sample
-* DESeq2 outputs, a number of plots are generated as well as the results file in `.csv` for further downstream visualisations
+* DESeq2 outputs at gene and transcript level
+    * a number of plots are generated as well as the results file in `.csv` format for further downstream visualisations
 
 
 ## Dependencies
 
-While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required.
+While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required and refer to google or contact me
