@@ -6,11 +6,17 @@ set -o pipefail
 # This is just a very basic check for software
 # run from top of repository
 # If one is not available will fail with an error
-# pass the directory to trimmomatic as the first arguements
+
+
+# get the path to trimmomatic
+oldIFS="$IFS"
+IFS=$'\n' extraPaths=($(<"aux_files/extra_paths.txt"))
+IFS="$oldIFS"
+trimmomaticPath=${extraPaths[0]}
 
 fastqc
 
-java jar ${1}/trimmomatic-0.36.jar
+java jar ${trimmomaticPath}/trimmomatic-0.36.jar
 
 salmon cite
 
