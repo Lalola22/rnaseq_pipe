@@ -1,45 +1,46 @@
 # Analysis of RNA-seq data
 
-All code used to analyse RNA-seq data for $PAPERNAME are contained within this repository.
+A basic pipeline for analysis of RNA-seq data. This provides a framework for reference guided quantification and differential expression testing including both quality control steps on read files and trimming of adapters / low quality reads.
 
-Running the script `wrapper.sh` on raw-read `.fastq.gz` data in an environment with all dependencies installed will be sufficient to recreate analysis.
+ This pipeline has only been tested on RNA-seq data generated on the Illumina HiSeq platform.
 
-All programs used need to be added to the PATH
+**Note:** All programs used need to be added to `$PATH`
 
 ## Usage
 
 `./wrapper.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
 
-* The first arg so point to a directory containing condition-named directories with the paired end sequencing reads
-    * e.g. `data/` may contain `25uM/ DMSO/ Untreated/` and then `data/25uM/` has `25uM_1_R1.fastq.gz  25uM_1_R2.fastq.gz  25uM_2_R1.fastq.gz  25uM_2_R2.fastq.gz  25uM_3_R1.fastq.gz  25uM_3_R2.fastq.gz`
-* The second arg is the location you want results to be saved to
-* The third arg is the number of threads to allocate to this pipeline. The more the better: vroom vroom
+* The first argument points to a directory containing condition-named directories with the paired end sequencing reads
+    * e.g. `data/` may contain `{foo/,bar/}` and then `data/foo/` has `foo_1_R1.fastq.gz  2foo_1_R2.fastq.gz  foo_2_R1.fastq.gz  foo_2_R2.fastq.gz  foo_3_R1.fastq.gz  foo_3_R2.fastq.gz`
+* The second arguement is the location you want results to be saved to. If the directory does not exist it will be created
+* The third arguement is the number of threads to allocate to this pipeline. The more the better: vroom vroom
 
-The call to generate the data for the paper was
+An example call that also uses piping to `tee` to save a log of commands run is:
 
-`./wrapper.sh "/home/slee/data/bcl6_raw" "/home/slee/outputs/bcl6_paper" "18" | tee log.txt`
+`./wrapper.sh "/home/slee/data/bcl6_raw" "/home/slee/outputs/bcl6_paper" "18" | tee 2017-06-10-log.txt`
 
 ## Required meta-data
 
-### extra_paths.txt
+### `extra_paths.txt`
 
 This file should contain the following paths with trailing `/`
 
 * path to the trimmomatic directory
 * path to the reference transcriptome
-    *  A reference transcriptome can be downloaded from the UCSC genome browser
+    *  A reference transcriptome can be downloaded from the UCSC genome browser or from ensembl. The pipeline has been tested using ensembl GRCh38 release 88/89
 
-### sample_table.txt
+### `TruSeq3-PE.fa`
 
-This is a TSV file that contains the different comparisons that should be made within DESeq2 for the Salmon data. Column one is the treatment and column two the control. It should look something like this. Each row of the file will result in a new set of calls to DESeq2 for the Salmon results to be made.
+This fasta files contains the adapter sequences for Trimmomatic to remove. By default contains the Illumina adapters.
 
-```
-Treatment   Control Replicates
-25uM    DMSO    3
-DMSO    Untreated   3
-Dox Untreated   3
+### `condition_table.txt`
 
-```
+This is a csv table that lists each of the conditions and how many replicates there are. Used for creating the DESeq2 sample table
+
+### `de_tests_table.txt`
+
+This is a csv table that lists each of the log2 fold change tests to be run by DESeq2. Each line of this file is a test that will be conducted and saved to its own folder.
+
 
 ## Outputs
 
@@ -52,20 +53,4 @@ Dox Untreated   3
 
 ## Dependencies
 
-If you can run all these programs you should be good to go..
-
-* FastQC
-* Trimmomatic
-* salmon
-
-The following R packages will be needed
-
-* biomaRt
-* tidyverse
-* tximport
-* DESeq2
-* stringR
-
-Python 3.XX is required with the following non-standard packages
-
-* joblib
+While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required.
