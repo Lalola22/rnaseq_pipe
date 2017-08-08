@@ -12,6 +12,8 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 
  This pipeline has only been tested on RNA-seq data generated on the Illumina HiSeq platform.
 
+While every effort has been made to ensure this works as intended there are no guarantees of accuracy / vailidity of results generated etc.
+
 **Note:** All programs used need to be added to `$PATH`
 
 ## Usage
