@@ -14,11 +14,11 @@ IFS=$'\n' extraPaths=($(<"aux_files/extra_paths.txt"))
 IFS="$oldIFS"
 trimmomaticPath=${extraPaths[0]}
 
-fastqc
+fastqc -version
 
 # java jar ${trimmomaticPath}/trimmomatic-0.36.jar
 
-salmon cite
+salmon -v
 
 which R
 
