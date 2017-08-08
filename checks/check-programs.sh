@@ -16,7 +16,7 @@ trimmomaticPath=${extraPaths[0]}
 
 fastqc
 
-java jar ${trimmomaticPath}/trimmomatic-0.36.jar
+# java jar ${trimmomaticPath}/trimmomatic-0.36.jar
 
 salmon cite
 

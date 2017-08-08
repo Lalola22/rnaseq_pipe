@@ -35,7 +35,7 @@ cd YYYY-MM-DD-rnaseq_pipe
 
 # check all dependencies
 
-./checks/check-packages.R
+Rscript checks/check-packages.R
 
 ./checks/check-programs.sh
 
@@ -86,4 +86,4 @@ This is a csv table that lists each of the log2 fold change tests to be run by D
 
 ## Dependencies
 
-While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required and refer to google or contact me
+While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required and refer to google or contact me. Currently trimmomatic install status is not tested by `check-programs.sh`
