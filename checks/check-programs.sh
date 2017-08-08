@@ -18,6 +18,7 @@ fastqc -version
 
 # java jar ${trimmomaticPath}/trimmomatic-0.36.jar
 
+echo Salmon:
 salmon -v
 
 which R
