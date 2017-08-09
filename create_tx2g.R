@@ -8,7 +8,7 @@
 library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(BiocParallel, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
-library(EnsDb.Hsapiens.v79, quietly = TRUE,
+library(EnsDb.Hsapiens.v86, quietly = TRUE,
     verbose = FALSE, warn.conflicts = FALSE)
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -22,7 +22,7 @@ register(MulticoreParam(cores))
 
 print("Forming gene to transcript mapping...", quote = FALSE)
 
-txdb <- EnsDb.Hsapiens.v79
+txdb <- EnsDb.Hsapiens.v86
 k <- keys(txdb, keytype = "GENENAME")
 df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
