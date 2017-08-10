@@ -14,7 +14,10 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 
 While every effort has been made to ensure this works as intended there are no guarantees of accuracy / vailidity of results generated etc.
 
-**Note:** All programs used need to be added to `$PATH`
+**Notes:**
+
+* All programs used need to be added to `$PATH` (the dependencies check will pick up if they're not)
+* At this stage assumes your RNA-seq reads are Human... will update with an option to set the species for the transcript -> gene mapping soon. The transcript level data should be fine at this point if it manages to run through despite the species issue.
 
 ## Usage
 
