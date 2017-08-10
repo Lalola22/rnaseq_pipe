@@ -18,7 +18,7 @@ While every effort has been made to ensure this works as intended there are no g
 
 ## Usage
 
-`./wrapper.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
+`./run_bioinformatics.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
 
 * The first argument points to a directory containing condition-named directories with the paired end sequencing reads
     * e.g. `data/` may contain `{foo/,bar/}` and then `data/foo/` has `foo_1_R1.fastq.gz  foo_1_R2.fastq.gz  foo_2_R1.fastq.gz  foo_2_R2.fastq.gz  foo_3_R1.fastq.gz  foo_3_R2.fastq.gz`
@@ -30,8 +30,8 @@ One approach to keeping the scripts used to create results associated with them 
 ```bash
 # clone the git repo and give a descriptive name
 git clone https://github.com/samleenz/rnaseq_pipe.git
-mv rnaseq_pipe YYYY-MM-DD-rnaseq_pipe
-cd YYYY-MM-DD-rnaseq_pipe
+mv rnaseq_pipe YYYY-MM-DD-rnaseq_pipe-experiment-details
+cd YYYY-MM-DD-rnaseq-pipe-experiment-details
 
 # STOP: edit the aux files to match your experimental design
 
@@ -47,7 +47,7 @@ datDir="/home/slee/data/bcl6_raw"
 outDir="outputs"
 cores="18"
 
-./run_analysis.sh $datDir $outDir $cores | tee log.txt
+./run_bioinformatics.sh $datDir $outDir $cores | tee log.txt
 ```
 
 
