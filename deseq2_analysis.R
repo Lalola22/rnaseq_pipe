@@ -32,7 +32,7 @@ args <- commandArgs(trailingOnly = TRUE)
 #      stop("Six arguments must be supplied.", call. = FALSE)
 # }
 
-top_dir <- args[1]
+top.dir <- args[1]
 aux.dir <- args[2]
 cores <- as.numeric(args[3])
 
