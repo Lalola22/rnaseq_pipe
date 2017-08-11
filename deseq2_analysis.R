@@ -37,16 +37,6 @@ aux.dir <- args[2]
 cores <- as.numeric(args[3])
 
 
-
-# Test values
-
-top.dir <- "/home/slee/outputs/bcl6_paper_deseq"
-aux.dir <- "/home/slee/bcl6_rnaseq/aux_files"
-cores <- 20
-
-ref.dir <- "/home/slee/reference_files"
-res.dir <- file.path(top.dir, "deseq2_results")
-
 dte <- format(Sys.time(), "%Y-%m-%d")
 
 # Set number of cores for multi-processing
@@ -76,7 +66,7 @@ deseq_test <- function(dds.x, treat, control, level){
   # Saves the head of the raw results so test details etc
   #   can be tested
   # also saves an MA plot of the data
-  # level is gene or transcript - just used for naming 
+  # level is gene or transcript - just used for naming
   #   the results dir
   # ---
   # TEST VALS
@@ -90,7 +80,7 @@ deseq_test <- function(dds.x, treat, control, level){
   dir.create(results.dir, recursive = TRUE, showWarnings = F)
   res.x <- results(
     dds.x,
-    contrast = c("condition", treat, control) 
+    contrast = c("condition", treat, control)
   )
   res.x.ordered <- res.x[order(res.x$padj),]
   ## Save the MA plot
@@ -132,7 +122,7 @@ deseq_test <- function(dds.x, treat, control, level){
 
 # read the gene - tx mappings  --------------------------------------------
 
-tx2gene <- read_csv(file.path(ref.dir, "tx2g_table.csv")) 
+tx2gene <- read_csv(file.path(ref.dir, "tx2g_table.csv"))
 
 # sample table construction --------------------------
 
@@ -162,7 +152,7 @@ sample_table$condition <- factor(
 )
 # sample_table <- sample_table %>%
 #   mutate( path = sub("XXXXX", sample,  path))
-  
+
 
 
 ## check if this is needed...
