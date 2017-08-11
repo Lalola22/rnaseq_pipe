@@ -67,7 +67,8 @@ def call_trimmomatic_par(subdir):
                 basename = dividing[0].replace("_R1", "")
                 # This is the forward read sans extensions
                 call("java -jar " + trim +
-                     "trimmomatic-0.36.jar PE -phred33 " + fulldir + fileR1 +
+                     "trimmomatic-0.36.jar PE -threads " + max_threads +
+                     " -phred33 " + fulldir + fileR1 +
                      " " + fulldir + fileR2 + " -baseout " + processed +
                      basename + ".fastq.gz ILLUMINACLIP:" + aux +
                      "TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 " +
