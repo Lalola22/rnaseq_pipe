@@ -19,10 +19,10 @@
 
 # Setup -----------------------------------------------
 
-library(tidyverse, quietly = TRUE)
-library(BiocParallel, quietly = TRUE)
-library(tximport, quietly = TRUE)
-library(DESeq2, quietly = TRUE)
+suppressPackageStartupMessages(library(tidyverse, quietly = TRUE))
+suppressPackageStartupMessages(library(BiocParallel, quietly = TRUE))
+suppressPackageStartupMessages(library(tximport, quietly = TRUE))
+suppressPackageStartupMessages(library(DESeq2, quietly = TRUE))
 
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -51,11 +51,12 @@ res.dir <- file.path(top.dir, "deseq2_results")
 
 # Functions ---------------------------------------------------------------
 
-tx_gene_conv <- function(tx, tx2g){ # requires tx2g be loaded
-  # takes a vec of TX_IDS and returns a vec of HGNC_IDS
-  vec <-  match(tx, tx2g$TXID)
-  gene <- tx2g[vec, 2]
-  return(gene)
+tx_gene_conv <- function(tx, tx2g){
+    # requires tx2g be loaded
+    # takes a vec of TX_IDS and returns a vec of HGNC_IDS
+    vec <-  match(tx, tx2g$TXID)
+    gene <- tx2g[vec, 2]
+    return(gene)
 }
 
 deseq_test <- function(dds.x, treat, control, level){
