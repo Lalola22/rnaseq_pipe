@@ -49,7 +49,7 @@ def kallisto_call(read1):
     read2 = read1.replace("1P", "2P")
     call(
         "kallisto quant -i " + basedir +
-        "reference_files/GRCh38transcriptome_kal.idx -t " +
+        "reference_files/transcriptome_kallisto.idx -t " +
         max_threads + " -o " + processed + basename + " -b 100 " +
         inputdirectory + read1 + " " + inputdirectory + read2, shell=True)
 
