@@ -6,7 +6,7 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 
 * `FastQC` for fastq file quality checking
 * `trimmomatic` for fastq read trimming
-* `salmon` for pseudo-alignment and quantifications
+* `Kallisto` for pseudo-alignment and quantifications
 * `tximport` to prep quantifications for DE testing
 * `DESeq2` for testing of differential expression
 
@@ -84,7 +84,7 @@ This is a csv table that lists each of the log2 fold change tests to be run by D
 * FastQC Reports for before and after read trimming
 * Trimmed `.fastq.gz` files for each pair of raw-reads.
     * Forward / reverse paired and forward / reverse unpaired
-* Salmon quantifications for each sample
+* kallisto quantifications with bootstrapping (n = 100) for each sample
 * DESeq2 outputs at gene and transcript level
     * a number of plots are generated as well as the results file in `.csv` format for further downstream visualisations
 
