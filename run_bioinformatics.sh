@@ -108,6 +108,8 @@ kallisto index -i "$transcriptome" \
 
 echo "Running Kallisto to quantify reads"
 
+python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+
 # -- Prep for DESeq2
 
 Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
