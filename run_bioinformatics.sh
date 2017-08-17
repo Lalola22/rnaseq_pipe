@@ -52,7 +52,7 @@ cd -
 # Set paths
 
 trimmomaticPath=${extraPaths[0]}
-GRCh38trans=${extraPaths[1]}
+transcriptome=${extraPaths[1]}
 
 export PATH=${PWD}:$PATH
 
@@ -85,17 +85,28 @@ mkdir -p "${outDir}/fastqc/trimmed"
 fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 # -- Salmon index
+#
+# echo "Creating the Salmon index..."
+#
+# salmon index -t "$GRCh38trans" -i \
+# "${outDir}/reference_files/GRCh38transcriptome_sal.idx"
+#
+# # -- Salmon quant
+#
+# echo "Salmon quantifications..."
+#
+# python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
-echo "Creating the Salmon index..."
+# -- Kallisto index
 
-salmon index -t "$GRCh38trans" -i \
-"${outDir}/reference_files/GRCh38transcriptome_sal.idx"
+echo "Creating the Kallisto index for " $(basename $transcriptome)
 
-# -- Salmon quant
+kallisto index -i "$transcriptome" \
+"$outDir/reference_files/transcriptome_kallisto.idx"
 
-echo "Salmon quantifications..."
+# -- Kallisto quants
 
-python3 salmon_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
+echo "Running Kallisto to quantify reads"
 
 # -- Prep for DESeq2
 
