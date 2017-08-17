@@ -143,7 +143,7 @@ for (i in 1:length(condition.table$condition)){
 # create sample table with sample names, conditions, and paths to quant.sf's
 sample_table <- cbind(samples,
                       gsub(pattern = "_[1,2,3]", "", samples),
-                      file.path(top.dir, "salmon", samples, "quant.sf"))
+                      file.path(top.dir, "kallisto", samples, "abundance.h5"))
 sample_table <- as.data.frame(sample_table, stringsAsFactors = FALSE)
 colnames(sample_table) <- c("sample", "condition", "path")
 # make conditions factors for DESeq2 contrast testing.
@@ -173,20 +173,24 @@ if (! dircheck == TRUE){
 
 ## Import the quantification data
 
-print("Importing the salmon quantifications...", quote = FALSE)
+print("Importing the kallisto quantifications...", quote = FALSE)
 
 txi.tx <- tximport(
   sample_table$path,
-  type = "salmon",
+  type = "kallisto",
   tx2gene = tx2gene,
-  txOut = TRUE
+  txOut = TRUE,
+  countsFromAbundance = "lengthScaledTPM",
+  ignoreTxVersion = T
   )
 txi.gene <- tximport(
   sample_table$path,
-  type = "salmon",
+  type = "kallisto",
   tx2gene = tx2gene,
-  txOut = FALSE
-)
+  txOut = FALSE,
+  countsFromAbundance = "lengthScaledTPM",
+  ignoreTxVersion = T
+  )
 
 ddsTxi.tx <- DESeqDataSetFromTximport(txi.tx,
                                    colData = sample_table,
