@@ -213,9 +213,9 @@ dds.gene <- DESeq(ddsTxi.gene, parallel = TRUE)
 
 # shrink models with rld for visualisation
 print("Regular log transform the transcript level data", quote = FALSE)
-rld.tx <- rlog(dds.tx)
+rld.tx <- rlog(dds.tx, blind = FALSE)
 print("Regular log transform the gene level data", quote = FALSE)
-rld.gene <- rlog(dds.gene)
+rld.gene <- rlog(dds.gene, blind = FALSE)
 
 # Make PCA plots of the sample distances
 
