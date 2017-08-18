@@ -30,7 +30,10 @@ if [ ! -d $outDir ]
 then
     mkdir -p $outDir
 fi
-
+if [ ! -d "${outDir}/reference_files" ]
+then
+    mkdir -p "${outDir}/reference_files"
+fi
 # Initialise bash array with raw-read paths
 
 fastqArray=($(find $rawDir -type f -name "*.fastq.gz"))
