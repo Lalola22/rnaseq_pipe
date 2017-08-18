@@ -101,8 +101,8 @@ fastqc -o "${outDir}/fastqc/trimmed" -t $cores ${fastqArrayTrim[@]]}
 
 echo "Creating the Kallisto index for " $(basename $transcriptome)
 
-kallisto index -i "$transcriptome" \
-"$outDir/reference_files/transcriptome_kallisto.idx"
+kallisto index -i "$outDir/reference_files/transcriptome_kallisto.idx" \
+"$transcriptome"
 
 # -- Kallisto quants
 
