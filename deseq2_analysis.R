@@ -192,6 +192,9 @@ txi.gene <- tximport(
   ignoreTxVersion = T
   )
 
+rownames(txi.tx$counts) <- as.character(rownames(txi.tx$counts))
+rownames(txi.gene$counts) <- as.character(rownames(txi.gene$counts))
+
 ddsTxi.tx <- DESeqDataSetFromTximport(txi.tx,
                                    colData = sample_table,
                                    design = ~condition)
