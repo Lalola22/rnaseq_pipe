@@ -130,6 +130,7 @@ tx2gene <- read_csv(file.path(ref.dir, "tx2g_table.csv"))
 condition.table <- read_csv(file.path(aux.dir, "condition_table.txt"))
 
 # build the list of sample names from the condition table
+# they will be foo_1 .. foo_n etc
 samples <- c()
 for (i in 1:length(condition.table$condition)){
   reps <- condition.table$replicates[[i]]
@@ -142,7 +143,7 @@ for (i in 1:length(condition.table$condition)){
 
 # create sample table with sample names, conditions, and paths to quant.sf's
 sample_table <- cbind(samples,
-                      gsub(pattern = "_[1,2,3]", "", samples),
+                      gsub(pattern = "_[0-9]+", "", samples),
                       file.path(top.dir, "kallisto", samples, "abundance.h5"))
 sample_table <- as.data.frame(sample_table, stringsAsFactors = FALSE)
 colnames(sample_table) <- c("sample", "condition", "path")
@@ -151,13 +152,7 @@ sample_table$condition <- factor(
   sample_table$condition,
   levels = condition.table$condition
 )
-# sample_table <- sample_table %>%
-#   mutate( path = sub("XXXXX", sample,  path))
 
-
-
-## check if this is needed...
-# rownames(sample_table) <- sample_table$sample
 
 ## print to display as a check while program runs
 print("Sample table:", quote = FALSE)
