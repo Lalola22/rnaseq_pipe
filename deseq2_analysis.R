@@ -223,20 +223,21 @@ dds.pca.gene <-  plotPCA(rld.gene)
 # Do the test specified in de_test_table ----------------------------------
 
 de.tests.table <- read_csv(file.path(aux.dir, "de_tests_table.txt"))
+colnames(de.tests.table) <- toupper(colnames(de.tests.table))
 
 # Transcript level
 print("Extracting transcript level comparisons", quote = FALSE)
 mapply(deseq_test,
-       treat = de.tests.table$Treatment,
-       control = de.tests.table$Control,
+       treat = de.tests.table$TREATMENT,
+       control = de.tests.table$CONTROL,
        MoreArgs = list(dds.x = dds.tx,
                        level = "transcript"))
 
 # Gene level
 print("Extracting gene level comparisons", quote = FALSE)
 mapply(deseq_test,
-       treat = de.tests.table$Treatment,
-       control = de.tests.table$Control,
+       treat = de.tests.table$TREATMENT,
+       control = de.tests.table$CONTROL,
        MoreArgs = list(dds.x = dds.gene,
                        level = "gene"))
 
