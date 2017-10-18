@@ -12,13 +12,12 @@
 
 library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
-library(EnsDb.Hsapiens.v86, quietly = TRUE,
-    verbose = FALSE, warn.conflicts = FALSE)
+
 
 args <- commandArgs(trailingOnly = TRUE)
 
 outdir <- args[1]
-species <- toLowere(args[2])
+species <- toLower(args[2])
 
 # check that the species is correct
 speciesCheck <- species %in% c("human", "mouse", "rat")
