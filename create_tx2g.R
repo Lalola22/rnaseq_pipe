@@ -27,15 +27,19 @@ if (! speciesCheck == TRUE){
 
 # assign species to  correct Db
 txdb <- if (species == "human") {
-   library(EnsDb.Hsapiens.v86, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+   library(EnsDb.Hsapiens.v86, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE);
+   txdb <- EnsDb.Hsapiens.v86
 } else {if (species == "mouse") {
-   library(EnsDb.Mmusculus.v79, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+   library(EnsDb.Mmusculus.v79, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE);
+   txdb <- EnsDb.Mmusculus.v79
 } else {
-   library(EnsDb.Rnorvegicus.v79, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+   library(EnsDb.Rnorvegicus.v79, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE);
+   txdb <- EnsDb.Rnorvegicus.v79
 }
    
 }
 
+print(paste("txdb is", sep = " ", " "))
 # Code body -------------------------------------------------------------------
 
 print("Forming gene to transcript mapping...", quote = FALSE)
