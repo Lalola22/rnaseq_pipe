@@ -10,7 +10,6 @@
 
 # Setup -------------------------------------------------------------------
 
-library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 
 
@@ -39,7 +38,6 @@ txdb <- if (species == "human") {
    
 }
 
-print(paste("txdb is", sep = " ", " "))
 # Code body -------------------------------------------------------------------
 
 print("Forming gene to transcript mapping...", quote = FALSE)
