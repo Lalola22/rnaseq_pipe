@@ -40,7 +40,7 @@ txdb <- if (species == "human") {
 
 print("Forming gene to transcript mapping...", quote = FALSE)
 
-txdb <- EnsDb.Hsapiens.v86
+
 k <- keys(txdb, keytype = "GENENAME")
 df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
