@@ -21,7 +21,7 @@ species <- tolower(args[2])
 
 # check that the species is correct
 speciesCheck <- species %in% c("human", "mouse", "rat")
-if (! dircheck == TRUE){
+if (! speciesCheck == TRUE){
   stop('Species must be one of "human", "mouse", or "rat"')
 }
 
