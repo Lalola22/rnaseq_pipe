@@ -253,6 +253,21 @@ ggsave(
   dds.pca.gene
 )
 
+# save TPM tables --------------------------------------------------------
+
+tpm.gene <- txi.gene$abundance
+tpm.gene <- as.data.frame(cbind(rownames(tpm.gene), tpm.gene))
+colnames(tpm.gene)[1] <- "ID"
+rownames(tpm.gene) <- NULL
+write_csv(x = tpm.gene, path = file.path(res.dir, "gene", paste(dte, "gene-tpm-table.csv", sep = "-")), col_names = T)
+
+tpm.tx <- txi.tx$abundance
+tpm.tx <- as.data.frame(cbind(rownames(tpm.tx), tpm.tx))
+colnames(tpm.tx)[1] <- "ID"
+rownames(tpm.tx) <- NULL
+write_csv(x = tpm.tx, path = file.path(res.dir, "transcript", paste(dte, "transcript-tpm-table.csv", sep = "-")), col_names = T)
+
+
 # save session info --------------------------------------
 
 sink(file =file.path(res.dir, paste(dte, "dseq2_sessionInfo.txt", sep = "_")))
