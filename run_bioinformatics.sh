@@ -3,7 +3,7 @@ set -e
 set -u
 set -o pipefail
 
-# usage: scriptname.sh "/path/to/fastq/dirs" "/path/to/output/dir" "n_cores"
+# usage: scriptname.sh "/path/to/fastq/dirs" "/path/to/output/dir" "species" "n_cores"
 # run from top of repository
 # $cores needs to be adjusted for individual machines
 
@@ -11,7 +11,8 @@ set -o pipefail
 
 rawDir="$1"
 outDir="$2"
-cores="$3"
+species="$3"
+cores="$4"
 
 # test fastq files are readable
 
@@ -115,7 +116,7 @@ python3 kallisto_quant.py "${outDir}/" "${outDir}/batch_trim/" "$cores"
 
 # -- Prep for DESeq2
 
-Rscript create_tx2g.R "${outDir}/reference_files" "$cores"
+Rscript create_tx2g.R "${outDir}/reference_files" "$species"
 
 
 # -- DESeq2 for salmon
