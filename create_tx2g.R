@@ -11,6 +11,7 @@
 # Setup -------------------------------------------------------------------
 
 library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 
 
 args <- commandArgs(trailingOnly = TRUE)
