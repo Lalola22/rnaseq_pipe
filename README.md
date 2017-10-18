@@ -17,16 +17,18 @@ While every effort has been made to ensure this works as intended there are no g
 **Notes:**
 
 * All programs used need to be added to `$PATH` (the dependencies check will pick up if they're not)
-* At this stage assumes your RNA-seq reads are Human... will update with an option to set the species for the transcript -> gene mapping soon. The transcript level data should be fine at this point if it manages to run through despite the species issue.
+
 
 ## Usage
 
-`./run_bioinformatics.sh "/path/to/data" "/path/to/results/dir" "number of cores"`
+`./run_bioinformatics.sh "/path/to/data" "/path/to/results/dir" "species" "number of cores"`
 
 * The first argument points to a directory containing condition-named directories with the paired end sequencing reads
     * e.g. `data/` may contain `{foo/,bar/}` and then `data/foo/` has `foo_1_R1.fastq.gz  foo_1_R2.fastq.gz  foo_2_R1.fastq.gz  foo_2_R2.fastq.gz  foo_3_R1.fastq.gz  foo_3_R2.fastq.gz`
-* The second arguement is the location you want results to be saved to. If the directory does not exist it will be created
-* The third arguement is the number of threads to allocate to this pipeline. The more the better: vroom vroom
+* The second argument is the location you want results to be saved to. If the directory does not exist it will be created
+* The third argument is the species to be used for tx - gene mapping, must be one of "Human", "Mouse", or "Rat"
+    * if there is another species that support is needed for just ask I can sort it!
+* The fourth argument is the number of threads to allocate to this pipeline. The more the better: vroom vroom
 
 One approach to keeping the scripts used to create results associated with them will be to create a fresh clone of this repository prior to running the pipeline and saving the results within it e.g.
 
@@ -48,9 +50,10 @@ Rscript checks/check-packages.R
 
 datDir="/home/slee/data/bcl6_raw"
 outDir="outputs"
+species="Human"
 cores="18"
 
-./run_bioinformatics.sh $datDir $outDir $cores | tee log.txt
+./run_bioinformatics.sh $datDir $outDir $species $cores | tee log.txt
 ```
 
 
@@ -91,4 +94,4 @@ This is a csv table that lists each of the log2 fold change tests to be run by D
 
 ## Dependencies
 
-While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required and refer to google or contact me. Currently trimmomatic install status is not tested by `check-programs.sh`
+While this pipeline does not install required software there are two file `checks/check-packages.R` and `checks/check-programs.sh` that can be run as a quick test that all programs are installed. If either of these fail look at the error message to work out what packages or programs are stil required and refer to google or contact me. Currently trimmomatic install status is not tested by `check-programs.sh`. It will check for the presence of all three of the Ensembl species database packages but if you know you have the one needed you can ignore the error message for the other species if you don't want to install them.
