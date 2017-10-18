@@ -10,8 +10,8 @@
 
 # Setup -------------------------------------------------------------------
 
-library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(tidyverse, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+library(ensembldb, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -45,7 +45,7 @@ print("Forming gene to transcript mapping...", quote = FALSE)
 
 
 k <- keys(txdb, keytype = "GENENAME")
-df <- select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
+df <- ensembldb::select(txdb, keys = k, keytype = "GENENAME", columns = "TXID")
 tx2gene <- df[, 2:1]  # tx ID, then gene ID
 
 print(sprintf("Saving the gene to transcript mapping for %s", species), quote = FALSE)
