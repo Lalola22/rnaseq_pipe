@@ -204,7 +204,7 @@ print("Creating transcript level DESeq2 object", quote = FALSE)
 dds.tx <- DESeq(ddsTxi.tx, parallel = TRUE, betaPrior = TRUE)
 
 print("Creating gene level DESeq2 object", quote = FALSE)
-dds.gene <- DESeq(ddsTxi.gene, parallel = TRUE)
+dds.gene <- DESeq(ddsTxi.gene, parallel = TRUE, betaPrior = TRUE)
 
 # shrink models with rld for visualisation
 print("Regular log transform the transcript level data", quote = FALSE)
