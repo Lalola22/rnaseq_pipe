@@ -1,6 +1,7 @@
 # Analysis of RNA-seq data
 
 Written by Samuel Lee: samleenz@me.com
+Forked version by Lalola22 for McConnell group
 
 A basic pipeline for analysis of RNA-seq data. This provides a framework for reference guided quantification and differential expression testing including both quality control steps on read files and trimming of adapters / low quality reads.
 
@@ -9,6 +10,8 @@ A basic pipeline for analysis of RNA-seq data. This provides a framework for ref
 * `Kallisto` for pseudo-alignment and quantifications
 * `tximport` to prep quantifications for DE testing
 * `DESeq2` for testing of differential expression
+
+* investigating incorportaton of additional qc to control for sample bias
 
  This pipeline has only been tested on RNA-seq data generated on the Illumina HiSeq platform.
 
